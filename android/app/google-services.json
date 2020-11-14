@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "752208175128",
+    "firebase_url": "https://weckertestdb.firebaseio.com",
+    "project_id": "weckertestdb",
+    "storage_bucket": "weckertestdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752208175128:android:ad3c9260cfcf2aee2da36d",
+        "android_client_info": {
+          "package_name": "com.example.wecker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752208175128-54cs44u4dgn9jnlj3tak17n5c1j34g34.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjRT340mI-UyhZbZvSWJaNa_-g1JdHFv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752208175128-54cs44u4dgn9jnlj3tak17n5c1j34g34.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
