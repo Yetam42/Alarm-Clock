@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:light/light.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'dart:async';
 
 class BrightnessWidget extends StatefulWidget {
-
-
   BrightnessWidget({label});
 
   @override
   _BrightnessWidgetState createState() => _BrightnessWidgetState();
 }
 
-class _BrightnessWidgetState extends State<BrightnessWidget>{
+class _BrightnessWidgetState extends State<BrightnessWidget> {
   String luxlight = "Unknown";
   Light _light;
   StreamSubscription _subscribtion;
@@ -23,16 +22,15 @@ class _BrightnessWidgetState extends State<BrightnessWidget>{
     });
   }
 
-  void stopListening(){
+  void stopListening() {
     _subscribtion.cancel();
   }
 
-  void startListening(){
+  void startListening() {
     _light = new Light();
     try {
       _subscribtion = _light.lightSensorStream.listen(onData);
-    }
-    on LightException catch (exception){
+    } on LightException catch (exception) {
       print(exception);
     }
   }
@@ -47,38 +45,36 @@ class _BrightnessWidgetState extends State<BrightnessWidget>{
     startListening();
   }
 
-  bool brightEnough(){
-    if(int.parse(luxlight) > 10){
+  bool brightEnough() {
+    if (int.parse(luxlight) > 10) {
       return true;
-    }
-    else
+    } else
       return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if(brightEnough() == true) {
+    if (brightEnough() == true) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             child: new Text('Lichtstärke: $luxlight\n'),
           ),
-/*          RaisedButton(
+          RaisedButton(
               child: Text('Ausschalten'),
               onPressed: () {
-                FlutterRingtonePlayer.stop();}
-          )
+                FlutterRingtonePlayer.stop();
+              })
         ],
       );
-    }
-    else{
+    } else {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             child: new Text('Lichtstärke: $luxlight\n'),
-          )*/
+          )
         ],
       );
     }
