@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:light/light.dart';
 import 'dart:async';
 
 class BrightnessWidget extends StatefulWidget {
+
+
   BrightnessWidget({label});
 
   @override
@@ -19,7 +20,6 @@ class _BrightnessWidgetState extends State<BrightnessWidget>{
     print("Lux value: $luxValue");
     setState(() {
       luxlight = "$luxValue";
-
     });
   }
 
@@ -64,7 +64,7 @@ class _BrightnessWidgetState extends State<BrightnessWidget>{
           Container(
             child: new Text('Lichtstärke: $luxlight\n'),
           ),
-          RaisedButton(
+/*          RaisedButton(
               child: Text('Ausschalten'),
               onPressed: () {
                 FlutterRingtonePlayer.stop();}
@@ -78,7 +78,7 @@ class _BrightnessWidgetState extends State<BrightnessWidget>{
         children: [
           Container(
             child: new Text('Lichtstärke: $luxlight\n'),
-          )
+          )*/
         ],
       );
     }

@@ -1,9 +1,14 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
-//import 'package:intl/intl.dart';
+
+
+
+
+
 
 class DateTimePicker extends StatefulWidget {
+
+
   @override
   _DateTimePickerState createState() => _DateTimePickerState();
 }
@@ -22,7 +27,9 @@ class _DateTimePickerState extends State<DateTimePicker> {
 
   TextEditingController _timeController = TextEditingController();
 
-  final databaseReference = FirebaseDatabase.instance.reference();
+
+
+
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay picked =
@@ -37,28 +44,21 @@ class _DateTimePickerState extends State<DateTimePicker> {
         _timeController.text = formatDate(
             DateTime(2020, 08, 1, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();
-        createData(_timeController.text);
       });
   }
 
-  String compare (zeug){
+  String compare(zeug) {
     String a = '';
-    if(zeug == formatDate(
-        DateTime(2020, 08, 1, DateTime.now().hour, DateTime.now().minute),
-        [hh, ':', nn, " ", am]).toString()){
+    if (zeug ==
+        formatDate(
+            DateTime(2020, 08, 1, DateTime.now().hour, DateTime.now().minute),
+            [hh, ':', nn, " ", am]).toString()) {
       a = 'Yes';
     }
-    print(_selectTime(context));
+    //print(_selectTime(context));
     return a;
   }
 
-
-  void createData(time){
-    databaseReference.child("Wecker3").set({
-      'Angeschalten': false,
-      'Uhrzeit': time
-    });
-  }
 
   @override
   void initState() {
@@ -70,15 +70,12 @@ class _DateTimePickerState extends State<DateTimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
+    _height = MediaQuery.of(context).size.shortestSide;
     _width = MediaQuery.of(context).size.width;
 
-    print('Baum');
-
     return Container(
-      width: _width,
-      height: _height,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
             'Choose Time',
@@ -110,16 +107,15 @@ class _DateTimePickerState extends State<DateTimePicker> {
                 controller: _timeController,
                 decoration: InputDecoration(
                     disabledBorder:
-                    UnderlineInputBorder(borderSide: BorderSide.none),
+                        UnderlineInputBorder(borderSide: BorderSide.none),
                     contentPadding: EdgeInsets.all(5)),
               ),
             ),
           ),
-          new Text(
-            //compare(_timeController.text)
-            'Platzhalter'
-          ),
-//Debug zeug für datenbank
+          //ListView(),
+
+
+//Erzeugt einen Knopf mit dem man manuell in die Datenbank hochladen kann
           /*RaisedButton(
             child: const Text('In Datenbank speicher'),
               onPressed: () {
@@ -130,6 +126,5 @@ class _DateTimePickerState extends State<DateTimePicker> {
         ],
       ),
     );
-
   }
 }

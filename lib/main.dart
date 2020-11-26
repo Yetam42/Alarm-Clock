@@ -1,15 +1,26 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:wecker/SelectTime.dart';
 import 'package:wecker/BrightnessWidget.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:wecker/weckerClass.dart';
+import 'package:wecker/WeckerErstellen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MaterialApp(initialRoute: '/', routes: {
+    '/': (context) => HomeScreen(),
+    '/second': (context) => WeckerErstellen(),
+    '/third': (context) => MyApp()
+  }));
+}
 
 class MyApp extends StatelessWidget {
+  var actic = Wecker(id: 0, time: '10:00 AM', name: 'Actic', an: true);
 
+  //
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -27,59 +38,14 @@ class MyApp extends StatelessWidget {
                   },
                 ),
               ),
-              /*Padding(
-                padding: EdgeInsets.all(8),
-                child: RaisedButton(
-                  child: const Text('playAlarm asAlarm: false'),
-                  onPressed: () {
-                    FlutterRingtonePlayer.playAlarm(asAlarm: false);
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: RaisedButton(
-                  child: const Text('playNotification'),
-                  onPressed: () {
-                    FlutterRingtonePlayer.playNotification();
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: RaisedButton(
-                  child: const Text('playRingtone'),
-                  onPressed: () {
-                    FlutterRingtonePlayer.playRingtone();
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: RaisedButton(
-                  child: const Text('play'),
-                  onPressed: () {
-                    FlutterRingtonePlayer.play(
-                      android: AndroidSounds.notification,
-                      ios: IosSounds.glass,
-                      looping: true,
-                      volume: 1.0,
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: RaisedButton(
-                  child: const Text('stop'),
-                  onPressed: () {
-                    FlutterRingtonePlayer.stop();
-
-                  },
-                ),
-              ),*/
               BrightnessWidget(),
               DateTimePicker(),
+              RaisedButton(
+                child: Text('Zurück zum Hauptbildschrim'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
             ],
           ),
         ),
@@ -88,4 +54,30 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Sunshine'),
+        backgroundColor: Colors.orange,
+      ),
+      body: Center(
+        child: Column(children: <Widget>[
+          RaisedButton(
+            child: Text('Neuer Wecker'),
+            onPressed: () {
+              Navigator.pushNamed((context), '/second');
+            },
+          ),
+          RaisedButton(
+              child: Text('Alter Screen'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/third');
+              }),
 
+        ]),
+      ),
+    );
+  }
+}
