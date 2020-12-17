@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:path/path.dart';
 import 'package:wecker/SelectTime.dart';
 import 'package:wecker/BrightnessWidget.dart';
 import 'package:wecker/kp.dart';
-import 'package:wecker/weckerClass.dart';
 import 'package:wecker/WeckerErstellen.dart';
 import 'test.dart';
 
