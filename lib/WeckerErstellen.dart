@@ -14,8 +14,8 @@ void main() async {
       "CREATE TABLE wecker(id INTEGER PRIMARY KEY, time TEXT, name TEXT, an BOOLEAN)",
     );
   }, version: 1);
-
-  Future<void> insertWecker(Wecker wecker) async {
+}
+/*Future<void> insertWecker(Wecker wecker) async {
     final Database db = await database;
 
     await db.insert(
@@ -51,7 +51,7 @@ void main() async {
   }
 
   print(await wecker());
-}
+}*/
 
 class WeckerErstellen extends StatelessWidget {
   final myController = TextEditingController();
@@ -60,7 +60,6 @@ class WeckerErstellen extends StatelessWidget {
   Widget build(BuildContext context) {
     String name = '';
     String time = '';
-
 
     return Scaffold(
         appBar: AppBar(
@@ -93,10 +92,9 @@ class WeckerErstellen extends StatelessWidget {
               RaisedButton(
                 child: Text('Speichern'),
                 onPressed: () {
-                  Wecker(id: 1, time: time, name: name, an: true);
+                  Wecker(id: 1, time: time, name: name);
                 },
               )
-
             ],
           ),
         ));

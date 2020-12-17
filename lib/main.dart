@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:path/path.dart';
 import 'package:wecker/SelectTime.dart';
 import 'package:wecker/BrightnessWidget.dart';
+import 'package:wecker/kp.dart';
 import 'package:wecker/weckerClass.dart';
 import 'package:wecker/WeckerErstellen.dart';
+import 'test.dart';
 
 void main() {
   runApp(MaterialApp(initialRoute: '/', routes: {
     '/': (context) => HomeScreen(),
     '/second': (context) => WeckerErstellen(),
-    '/third': (context) => MyApp()
+    '/third': (context) => MyApp(),
+    '/forth': (context) => CreateAlarm(),
+    '/5': (context) => Listenscreen()
   }));
 }
 
-class MyApp extends StatelessWidget {
-  var actic = Wecker(id: 0, time: '10:00 AM', name: 'Actic', an: true);
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-  //
+class _MyAppState extends State<MyApp> {
+  //var actic = Wecker(id: 0, time: '10:00 AM', name: 'Actic', active: true);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +80,17 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/third');
               }),
+          RaisedButton(
+              child: Text('Test1'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/forth');
+              }),
+          RaisedButton(
+            child: Text('Liste'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/5');
+            },
+          )
         ]),
       ),
     );
