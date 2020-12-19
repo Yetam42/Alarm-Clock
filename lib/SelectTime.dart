@@ -92,6 +92,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
               height: _height / 9,
               alignment: Alignment.center,
               decoration: BoxDecoration(color: Colors.grey[200]),
+
               child: TextFormField(
                 style: TextStyle(fontSize: 40),
                 textAlign: TextAlign.center,

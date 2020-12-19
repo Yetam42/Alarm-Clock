@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:wecker/test.dart';
 import 'weckerClass.dart';
 
+/* =======================
+ * Stateful Widgets
+ * ======================= */
 class Listenscreen extends StatefulWidget {
   @override
   _ListenscreenState createState() => _ListenscreenState();
 }
 
+/* =======================
+ * Generic classes
+ * ======================= */
 class _ListenscreenState extends State<Listenscreen> {
   @override
   Widget build(BuildContext context) {

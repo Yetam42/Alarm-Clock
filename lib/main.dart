@@ -6,23 +6,29 @@ import 'package:wecker/kp.dart';
 import 'package:wecker/WeckerErstellen.dart';
 import 'test.dart';
 
-
 void main() {
+
   runApp(MaterialApp(initialRoute: '/', routes: {
     '/': (context) => HomeScreen(),
-    '/second': (context) => WeckerErstellen(),
-    '/third': (context) => MyApp(),
+    '/createAlarmClock': (context) => WeckerErstellen(),
+    '/testingPage': (context) => MyApp(),
     '/forth': (context) => CreateAlarm(),
     '/5': (context) => Listenscreen()
   }));
 }
 
+/* =======================
+ * Stateful Widgets
+ * ======================= */
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+/* =======================
+ * Generic classes
+ * ======================= */
+class MyAppState extends State<MyApp> {
   //var actic = Wecker(id: 0, time: '10:00 AM', name: 'Actic', active: true);
 
   @override
@@ -62,22 +68,39 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: Text('Sunshine'),
         backgroundColor: Colors.orange,
       ),
+
       body: Center(
         child: Column(children: <Widget>[
           RaisedButton(
-            child: Text('Neuer Wecker'),
+
+            // add the color
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    Color(0xFF0D47A1),
+                    Color(0xFF1976D2),
+                    Color(0xFF42A5F5),
+                  ]
+                )
+              ),
+
+              child: Text('Neuer Wecker'),
+            ),
+
             onPressed: () {
-              Navigator.pushNamed((context), '/second');
+              Navigator.pushNamed((context), '/createAlarmClock');
             },
           ),
           RaisedButton(
               child: Text('Alter Screen'),
               onPressed: () {
-                Navigator.pushNamed(context, '/third');
+                Navigator.pushNamed(context, '/testingPage');
               }),
           RaisedButton(
               child: Text('Test1'),
