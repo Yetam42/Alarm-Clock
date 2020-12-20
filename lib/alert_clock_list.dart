@@ -1,27 +1,32 @@
+/* =======================
+ * Imports
+ * ======================= */
 import 'package:flutter/material.dart';
-import 'package:wecker/test.dart';
-import 'weckerClass.dart';
+import 'package:wecker/Classes/database_helper.dart';
+import 'Classes/wecker.dart';
 
 /* =======================
  * Stateful Widgets
  * ======================= */
-class Listenscreen extends StatefulWidget {
+// AclScreen = Alert Clock List Screen
+class AclScreen extends StatefulWidget {
   @override
-  _ListenscreenState createState() => _ListenscreenState();
+  _AclScreenState createState() => _AclScreenState();
 }
 
 /* =======================
  * Generic classes
  * ======================= */
-class _ListenscreenState extends State<Listenscreen> {
+class _AclScreenState extends State<AclScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wecker'),
+        title: Text('List of all alert clocks'),
 
       ),
       body: FutureBuilder<List<Wecker>>(
+
         future: DatabaseHelper.instance.retrieveAlarms(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -57,6 +62,6 @@ _deleteAlarm(Wecker wecker) {
 }
 
 _updateAlarm(BuildContext context, Wecker wecker) async {
-  Navigator.push(context,
-      MaterialPageRoute(builder: (context) => CreateAlarm(wecker: wecker)));
+  //Navigator.push(context,
+  //    MaterialPageRoute(builder: (context) => CreateAlarm(wecker: wecker)));
 }

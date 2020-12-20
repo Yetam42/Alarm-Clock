@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:wecker/weckerClass.dart';
+import 'package:wecker/Classes/wecker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +53,7 @@ void main() async {
   print(await wecker());
 }*/
 
-class WeckerErstellen extends StatelessWidget {
+class CreateNewAlert extends StatelessWidget {
   final myController = TextEditingController();
 
   @override
