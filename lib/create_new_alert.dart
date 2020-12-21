@@ -2,58 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:wecker/Classes/wecker.dart';
+import 'Classes/alarm.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final Future<Database> database =
-      openDatabase(join(await getDatabasesPath(), 'wecker_database.db'),
+      openDatabase(join(await getDatabasesPath(), 'alarm_database.db'),
           onCreate: (db, version) {
     return db.execute(
-      "CREATE TABLE wecker(id INTEGER PRIMARY KEY, time TEXT, name TEXT, an BOOLEAN)",
+      "CREATE TABLE alarm(id INTEGER PRIMARY KEY, time TEXT, name TEXT, an BOOLEAN)",
     );
   }, version: 1);
-}
-/*Future<void> insertWecker(Wecker wecker) async {
-    final Database db = await database;
 
+  Future<void> insertAlarm(Alarm alarm) async {
+    final Database db = await database;
     await db.insert(
-      'wecker',
-      wecker.toMap(),
+      'alarm',
+      alarm.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<List<Wecker>> wecker() async {
+  Future<List<Alarm>> alarm() async {
     final Database db = await database;
 
-    final List<Map<String, dynamic>> maps = await db.query('wecker');
+    final List<Map<String, dynamic>> maps = await db.query('alarm');
 
     return List.generate(maps.length, (i) {
-      return Wecker(
-          id: maps[i]['id'],
-          time: maps[i]['time'],
-          name: maps[i]['name'],
-          an: maps[i]['an']);
+      return Alarm(
+          id: maps[i]['id'], time: maps[i]['time'], name: maps[i]['name']);
+      //an: maps[i]['an']);
     });
   }
 
-  Future<void> updateWecker(Wecker wecker) async {
+  Future<void> updateAlarm(Alarm alarm) async {
     final db = await database;
 
     await db.update(
-      'wecker',
-      wecker.toMap(),
+      'alarm',
+      alarm.toMap(),
       where: "id = ?",
-      whereArgs: [wecker.id],
+      whereArgs: [alarm.id],
     );
   }
 
-  print(await wecker());
-}*/
+  print(await alarm());
+}
 
-class CreateNewAlert extends StatelessWidget {
+class CreateNewAlarm extends StatelessWidget {
   final myController = TextEditingController();
 
   @override
@@ -92,7 +89,7 @@ class CreateNewAlert extends StatelessWidget {
               RaisedButton(
                 child: Text('Speichern'),
                 onPressed: () {
-                  Wecker(id: 1, time: time, name: name);
+                  Alarm(id: 1, time: time, name: name);
                 },
               )
             ],

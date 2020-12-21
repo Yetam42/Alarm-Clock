@@ -11,7 +11,6 @@ class TimeSelecter extends StatefulWidget {
 }
 
 class _TimeSelecterState extends State<TimeSelecter> {
-
   double _height;
   double _width;
 
@@ -32,10 +31,8 @@ class _TimeSelecterState extends State<TimeSelecter> {
 
     // Give a first assumption that the user wants
     // to set the timer one hour later
-    this.selectedTime = TimeOfDay(
-        hour: suggestedHour,
-        minute: TimeOfDay.now().minute
-    );
+    this.selectedTime =
+        TimeOfDay(hour: suggestedHour, minute: TimeOfDay.now().minute);
 
     this._timeController = TextEditingController();
   }
@@ -47,17 +44,15 @@ class _TimeSelecterState extends State<TimeSelecter> {
     // This functions refreshes the time which is displayed by the
     // "_timeController"
 
-    final TimeOfDay picked = await showTimePicker(
-        context: context,
-        initialTime: selectedTime
-    );
+    final TimeOfDay picked =
+        await showTimePicker(context: context, initialTime: selectedTime);
 
     if (picked != null)
       setState(() {
         selectedTime = picked;
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
-        _time = "${_hour}:${_minute}";
+        _time = "${_hour}:$_minute";
         _timeController.text = _time;
         _timeController.text = formatDate(
             DateTime(2020, 08, 1, selectedTime.hour, selectedTime.minute),
@@ -94,53 +89,48 @@ class _TimeSelecterState extends State<TimeSelecter> {
     _width = MediaQuery.of(context).size.width;
 
     return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            InkWell(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        InkWell(
+          // Report the current time (not neccessary for the client)
+          onTap: () {
+            _updateTimeDisplay(context);
 
-              // Report the current time (not neccessary for the client)
-              onTap: () {
-                _updateTimeDisplay(context);
+            dev.log("Current selected time: ${_timeController.text}",
+                name: "TimeSelecter => TimeDisplayValue");
+          },
 
-                dev.log(
-                    "Current selected time: ${_timeController.text}",
-                    name: "TimeSelecter => TimeDisplayValue");
+          child: Container(
+            // The time block where the selected alert time is displayed
+            margin: EdgeInsets.only(top: 30),
+            width: _width * 0.7,
+            height: _height * 0.25,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: Colors.grey[200]),
+
+            child: TextFormField(
+              style: TextStyle(fontSize: 40),
+              textAlign: TextAlign.center,
+              onSaved: (String val) {
+                _selectedAlertTime = val;
               },
+              enabled: false,
+              keyboardType: TextInputType.text,
 
-              child: Container(
-
-                // The time block where the selected alert time is displayed
-                margin: EdgeInsets.only(top: 30),
-                width: _width * 0.7,
-                height: _height * 0.25,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.grey[200]),
-
-                child: TextFormField(
-                  style: TextStyle(fontSize: 40),
-                  textAlign: TextAlign.center,
-                  onSaved: (String val) {
-                    _selectedAlertTime = val;
-                  },
-                  enabled: false,
-                  keyboardType: TextInputType.text,
-
-                  // the circle to select the number
-                  controller: _timeController,
-                  decoration: InputDecoration(
-                      disabledBorder:
-                          UnderlineInputBorder(borderSide: BorderSide.none),
-                      contentPadding: EdgeInsets.all(5)
-                  ),
-                ),
-              ),
+              // the circle to select the number
+              controller: _timeController,
+              decoration: InputDecoration(
+                  disabledBorder:
+                      UnderlineInputBorder(borderSide: BorderSide.none),
+                  contentPadding: EdgeInsets.all(5)),
             ),
-
-        ],
+          ),
+        ),
+      ],
     );
 
 //Erzeugt einen Knopf mit dem man manuell in die Datenbank hochladen kann
-          /*RaisedButton(
+    /*RaisedButton(
             child: const Text('In Datenbank speicher'),
               onPressed: () {
                 createData(_timeController.text);
