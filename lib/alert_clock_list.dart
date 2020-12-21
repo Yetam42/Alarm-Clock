@@ -42,26 +42,27 @@ class _AclScreenState extends State<AclScreen> {
                     setState(() {});
                   },
                   //list tile with the necessary information for the user
-                  child: ListTile(
-                    title: Text(snapshot.data[index].time),
-                    subtitle: Text(snapshot.data[index].name),
-                    //Switch that de -/ activates an alarm
-                    trailing: Switch(
-                        value: _getStatus(snapshot.data[index].active),
-                        onChanged: (value) {
-                          _toogleActiveState(snapshot.data[index]);
-                          setState(() {
-                            _getStatus(snapshot.data[index].active);
-                            print(_getStatus(snapshot.data[index].active));
-                          });
-                        }),
+                  child: Card(
+                    child: ListTile(
+                      title: Text(snapshot.data[index].time),
+                      subtitle: Text(snapshot.data[index].name),
+                      //Switch that de -/ activates an alarm
+                      trailing: Switch(
+                          value: _getStatus(snapshot.data[index].active),
+                          onChanged: (value) {
+                            _toogleActiveState(snapshot.data[index]);
+                            setState(() {
+                              _getStatus(snapshot.data[index].active);
+                              print(_getStatus(snapshot.data[index].active));
+                            });
+                          }),
 
-                    onTap: () {
-                      _updateAlarm(context, snapshot.data[index]);
-                      setState(() {});
-                    },
+                      onTap: () {
+                        _updateAlarm(context, snapshot.data[index]);
+                        setState(() {});
+                      },
+                    ),
                   ),
-
                   //the color + image that is revealed while swiping
                   background: Container(
                       margin: EdgeInsets.symmetric(horizontal: 15),

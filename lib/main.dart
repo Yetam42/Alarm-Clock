@@ -34,7 +34,7 @@ class _HomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(children: <Widget>[
-          RaisedButton(
+          /*RaisedButton(
             child: Text('Neuer Wecker'),
             onPressed: () {
               Navigator.pushNamed(context, '/createAlarmClock');
@@ -44,7 +44,7 @@ class _HomeScreen extends StatelessWidget {
               child: Text('Old Screen'),
               onPressed: () {
                 Navigator.pushNamed(context, '/oldscreen');
-              }),
+              }),*/
           RaisedButton(
               child: Text('Create Alarm'),
               onPressed: () {
