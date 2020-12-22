@@ -25,6 +25,8 @@ void main() {
  * The main routes
  * ======================= */
 class _HomeScreen extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +57,7 @@ class _HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushNamed(context, '/AlarmClockListScreen');
             },
-          )
+          ),
         ]),
       ),
     );

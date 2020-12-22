@@ -1,7 +1,6 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:wecker/Classes/database_helper.dart';
 import 'package:wecker/Classes/alarm.dart';
+import 'alarm_database.dart';
 
 class CreateAlarm extends StatefulWidget {
   final Alarm alarm;
@@ -12,8 +11,16 @@ class CreateAlarm extends StatefulWidget {
 }
 
 class _CreateAlarmState extends State<CreateAlarm> {
-  //Mit den TextEditingController kann man die Eingaben des Nutzers weiter verwenden
-  //
+
+  AlarmDatabase alarmDatabase;
+
+  _CreateAlarmState() {
+    // Load the database
+    this.alarmDatabase = AlarmDatabase('alarm_db');
+    this.alarmDatabase.loadDatabase();
+  }
+
+  // Mit den TextEditingController kann man die Eingaben des Nutzers weiter verwenden
   final timeTextController = TextEditingController();
   final nameTextController = TextEditingController();
   bool day;
@@ -103,7 +110,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              //Montag
+              // Monday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -123,7 +130,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                 ],
               ),
 
-              //Dienstag
+              // Tuesday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -141,6 +148,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Tue')
                 ],
               ),
+              // Wednesday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -158,6 +166,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Wed')
                 ],
               ),
+              // Thursday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -175,6 +184,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Thu')
                 ],
               ),
+              // Friday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -192,6 +202,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Fri')
                 ],
               ),
+              // Saturday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -209,6 +220,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Sat')
                 ],
               ),
+              // Sunnday
               Column(
                 children: <Widget>[
                   IconButton(
@@ -233,7 +245,10 @@ class _CreateAlarmState extends State<CreateAlarm> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            _saveAlarm(nameTextController.text, timeTextController.text);
+            _saveAlarm(
+                nameTextController.text,
+                timeTextController.text
+            );
             Navigator.pop(context, "Gespeichert");
             setState(() {});
           }),

@@ -1,29 +1,37 @@
+/*
+  This class saves the neccessary information for the database. It has all
+  information which are needed for an alarm clock.
+*/
 class Alarm {
   int id;
   String time = "";
   String name;
-  int active = 0;
-  int mon = 0;
-  int tue = 0;
-  int wed = 0;
-  int thu = 0;
-  int fri = 0;
-  int sat = 0;
-  int sun = 0;
-  static const String TABLENAME = 'alarm';
 
-  Alarm(
-      {this.id,
-      this.time,
-      this.name,
-      this.active,
-      this.mon,
-      this.tue,
-      this.wed,
-      this.thu,
-      this.fri,
-      this.sat,
-      this.sun});
+  int active;
+
+  /* -----------------
+   * The weekdays 
+   * ----------------- */
+  /*
+    Each index represents one weekday and if it's 1, than it means that it's
+    selected. As a result, that means:
+    Index 0 => Monday
+    Index 1 => Tuesday
+    Index 2 => Wednesday
+    Index 3 => Thursday
+    Index 4 => Friday
+    Index 5 => Saturday
+    Index 6 => Sunday
+  */
+  List<int> weekdays = [0, 0, 0, 0, 0, 0, 0];
+
+  /* ==============
+   * Functions 
+   * ============== */
+  Alarm() {
+    this.id = 0;
+    
+  }
 
   Map<String, dynamic> toMap() {
     return {

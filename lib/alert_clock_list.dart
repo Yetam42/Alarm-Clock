@@ -3,14 +3,15 @@
  * ======================= */
 import 'package:flutter/material.dart';
 import 'package:wecker/Classes/create_alarm.dart';
-import 'package:wecker/Classes/database_helper.dart';
 import 'Classes/alarm.dart';
+import 'Classes/alarm_database.dart';
 
 /* =======================
  * Stateful Widgets
  * ======================= */
 // AclScreen = Alert Clock List Screen
 class AclScreen extends StatefulWidget {
+
   @override
   _AclScreenState createState() => _AclScreenState();
 }
@@ -19,6 +20,10 @@ class AclScreen extends StatefulWidget {
  * Generic classes
  * ======================= */
 class _AclScreenState extends State<AclScreen> {
+
+  AlarmDatabase alarmDatabase = AlarmDatabase("alarm_database");
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +31,9 @@ class _AclScreenState extends State<AclScreen> {
         title: Text('List of all alarm clocks'),
       ),
       body: FutureBuilder<List<Alarm>>(
-        future: DatabaseHelper.instance.retrieveAlarms(),
+        future: .retrieveAlarms(),
         builder: (context, snapshot) {
+
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data.length,
