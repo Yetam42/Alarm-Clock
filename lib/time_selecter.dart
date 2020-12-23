@@ -14,7 +14,7 @@ class _TimeSelecterState extends State<TimeSelecter> {
   double _height;
   double _width;
 
-  String _selectedAlertTime;
+  //String _selectedAlertTime;
   String _hour;
   String _minute;
   String _time;
@@ -52,7 +52,7 @@ class _TimeSelecterState extends State<TimeSelecter> {
         selectedTime = picked;
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
-        _time = "${_hour}:$_minute";
+        _time = "$_hour:$_minute";
         _timeController.text = _time;
         _timeController.text = formatDate(
             DateTime(2020, 08, 1, selectedTime.hour, selectedTime.minute),
@@ -112,7 +112,7 @@ class _TimeSelecterState extends State<TimeSelecter> {
               style: TextStyle(fontSize: 40),
               textAlign: TextAlign.center,
               onSaved: (String val) {
-                _selectedAlertTime = val;
+                //_selectedAlertTime = val;
               },
               enabled: false,
               keyboardType: TextInputType.text,

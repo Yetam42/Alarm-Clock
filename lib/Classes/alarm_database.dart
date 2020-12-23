@@ -24,7 +24,7 @@ class AlarmDatabase {
    * ---------------- */
   AlarmDatabase(String databaseName) {
     // Set the needed values for the database
-    this._name = databaseName;
+    this._name = databaseName + '.db';
     this.database = null;
     /* ------------
      * Logging 
@@ -37,42 +37,57 @@ class AlarmDatabase {
      than it creates a new database.
    */
   void loadDatabase() async {
+
     // Get the path of the database and the database itself from the path
-    String databasePath = join(await getDatabasesPath(), this._name);
+    String _databasePath = join(await getDatabasesPath(), this._name);
+    dev.log("Database path: $_databasePath", name: "Loading database");
 
     // Used to look up, if the loading failed
-    bool loadingFailed = false;
+    bool _databaseExist = false;
 
     // To get the values of the logging levels:
     // https://pub.dev/documentation/logging/latest/logging/Level-class.html
     // This part makes sure that the database exist!
-    try {
-      await Directory(databasePath).create(recursive: true);
-    } catch (error) {
-      dev.log("Couldn't create or read the database!",
-          name: "Loading Database", level: 1200);
-
-      loadingFailed = true;
+    if (await Directory(_databasePath).exists())  {
+      _databaseExist = true;
     }
+    //try {
+    //  await Directory(_databasePath).create(recursive: true);
+    //  dev.log("Created database directory", name: "Loading database");
+    //} catch (error) {
+    //  dev.log("Couldn't create or read the database!",
+    //      name: "Loading Database", level: 1200);
+
+    //  _databaseExist = true;
+    //}
 
     /* ---------------------------
      * Test if loading failed 
      * --------------------------- */
-    if (loadingFailed) {
+    if (!_databaseExist) {
       // It ends the program for the time beeing. An implementation of an error
       // message might come up in the future.
       // TODO: Add Error popup for user
-
-    } else {
-      this.database = await openDatabase(databasePath, onCreate: _onCreate);
+      await File(_databasePath).create();
     }
+    dev.log("Welp... something went wrong...",
+            name: "Yeet");
+    this.database = await openDatabase(_databasePath,
+        version: 1,
+        onCreate: _onCreate);
+
+    dev.log("SUCCESS: Loaded database!",
+            name: "Loading database");
   }
 
   /*
-     This function is invoked if the database is initialised for the first time. 
+     This function is invoked if the database is initialised for the first time.
      It creates the default table for the alarm clocks.
    */
-  void _onCreate(Database db, int version) async {
+  Future _onCreate(Database db, int version) async {
+    dev.log("Creating database...",
+              name: "Loading Database");
+
     await db.execute("""CREATE TABLE AlarmClocks (
           id INTEGER PRIMARY KEY NOT NULL,
           time TEXT,
@@ -116,6 +131,7 @@ class AlarmDatabase {
         VALUES (
                 $nextID, 
                 ${alarmClock.name},
+                ${alarmClock.time},
                 ${alarmClock.active},
                 ${alarmClock.weekdays[0]},
                 ${alarmClock.weekdays[1]},
@@ -130,15 +146,41 @@ class AlarmDatabase {
   /*
    This function removes one clock in the database.
    */
-  void removeAlarm(AlarmClock alarmClock) async {
-
+  void removeAlarm(Map<String, dynamic> alarmClock) async {
+    this.database.rawQuery("""
+        DELETE FROM ${this._name} WHERE id=${alarmClock['id']}
+        )""");
   }
 
   /*
     This function updates the values from a clock in the database.
    */
-  void updateAlarm(AlarmClock alarmClock) async {
+  void updateAlarm(Map<String, dynamic> alarmClock) async {
+    this.database.rawQuery("""
+        UPDATE ${this._name} SET
+            name=${alarmClock['name']},
+            time=${alarmClock['time']},
+            name=${alarmClock['name']},
+            active=${alarmClock['active']},
+            mon=${alarmClock['weekdays'][0]},
+            tue=${alarmClock['weekdays'][1]},
+            wed=${alarmClock['weekdays'][2]},
+            thu=${alarmClock['weekdays'][3]},
+            fri=${alarmClock['weekdays'][4]},
+            sat=${alarmClock['weekdays'][5]},
+            sun=${alarmClock['weekdays'][6]}
+        WHERE id=${alarmClock['id']}
+            """);
+  }
 
+  /*
+    This function returns all alarm clocks which are saved inside of the
+    database ordered by their ID.
+   */
+  Future<List<Map<String, dynamic>>> getAlarmClocks() async {
+    return await this.database.rawQuery("""
+        SELECT * FROM alarm_db ORDER BY id;
+            """);
   }
 
   //Future<List<AlarmClock>> retrieveAlarms() async {

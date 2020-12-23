@@ -295,7 +295,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
           }),
     );
   }
-
+}
 
 
 //alarm is only saved if there is a time input from the user

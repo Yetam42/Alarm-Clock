@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:wecker/time_selecter.dart';
-import 'package:wecker/BrightnessWidget.dart';
 
 class OldScreen extends StatefulWidget {
   @override

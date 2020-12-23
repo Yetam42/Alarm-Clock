@@ -3,9 +3,8 @@
  * ======================= */
 import 'package:flutter/material.dart';
 import 'package:wecker/alert_clock_list.dart';
-import 'package:wecker/create_new_alert.dart';
 import 'package:wecker/old_screen.dart';
-import 'Classes/create_alarm.dart';
+import 'create_alarm/create_alarm.dart';
 
 import 'dart:developer' as dev;
 
@@ -14,7 +13,7 @@ void main() {
 
   runApp(MaterialApp(initialRoute: '/', routes: {
     '/': (context) => _HomeScreen(),
-    '/createAlarmClock': (context) => CreateNewAlarm(),
+    '/createAlarmClock': (context) => CreateAlarm(),
     '/oldscreen': (context) => OldScreen(),
     '/forth': (context) => CreateAlarm(),
     '/AlarmClockListScreen': (context) => AclScreen()
