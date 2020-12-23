@@ -2,7 +2,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import 'dart:developer' as dev;
-import 'dart:io';
 
 import 'package:wecker/Classes/alarm_clock.dart';
 
@@ -10,6 +9,9 @@ import 'package:wecker/Classes/alarm_clock.dart';
 class AlarmDatabase {
   // The name of the database
   String _name;
+
+  // The name of the table
+  final String _tableName = "AlarmClocks";
 
   //static const databaseName = 'alarm_database.db';
   //static final DatabaseHelper instance = DatabaseHelper();
@@ -24,11 +26,9 @@ class AlarmDatabase {
    * ---------------- */
   AlarmDatabase(String databaseName) {
     // Set the needed values for the database
-    this._name = databaseName + '.db';
+    this._name = databaseName;
     this.database = null;
-    /* ------------
-     * Logging 
-     * ------------ */
+
     dev.log("DatabaseName: ${this._name}", name: "Database Initialisation");
   }
 
@@ -39,56 +39,24 @@ class AlarmDatabase {
   void loadDatabase() async {
 
     // Get the path of the database and the database itself from the path
-    String _databasePath = join(await getDatabasesPath(), this._name);
-    dev.log("Database path: $_databasePath", name: "Loading database");
+    String _databasePath = join(await getDatabasesPath(), this._name) + '.db';
 
-    // Used to look up, if the loading failed
-    bool _databaseExist = false;
+    dev.log("Database path: $_databasePath", name: "Loading database");
 
     // To get the values of the logging levels:
     // https://pub.dev/documentation/logging/latest/logging/Level-class.html
-    // This part makes sure that the database exist!
-    if (await Directory(_databasePath).exists())  {
-      _databaseExist = true;
-    }
-    //try {
-    //  await Directory(_databasePath).create(recursive: true);
-    //  dev.log("Created database directory", name: "Loading database");
-    //} catch (error) {
-    //  dev.log("Couldn't create or read the database!",
-    //      name: "Loading Database", level: 1200);
+    this.database = await openDatabase(_databasePath, version: 1);
 
-    //  _databaseExist = true;
-    //}
+    // Test, if the table exists
+    if (await this.tableNotExist())
+        this._createTable();
 
-    /* ---------------------------
-     * Test if loading failed 
-     * --------------------------- */
-    if (!_databaseExist) {
-      // It ends the program for the time beeing. An implementation of an error
-      // message might come up in the future.
-      // TODO: Add Error popup for user
-      await File(_databasePath).create();
-    }
-    dev.log("Welp... something went wrong...",
-            name: "Yeet");
-    this.database = await openDatabase(_databasePath,
-        version: 1,
-        onCreate: _onCreate);
-
-    dev.log("SUCCESS: Loaded database!",
-            name: "Loading database");
+    dev.log("Finished loading the database", name: "Loading database");
   }
 
-  /*
-     This function is invoked if the database is initialised for the first time.
-     It creates the default table for the alarm clocks.
-   */
-  Future _onCreate(Database db, int version) async {
-    dev.log("Creating database...",
-              name: "Loading Database");
-
-    await db.execute("""CREATE TABLE AlarmClocks (
+  // This function creates the default table in the database if it didn't exist
+  void _createTable() async {
+    await this.database.execute("""CREATE TABLE ${this._tableName} (
           id INTEGER PRIMARY KEY NOT NULL,
           time TEXT,
           name TEXT,
@@ -99,8 +67,17 @@ class AlarmDatabase {
           thu INT2,
           fri INT2,
           sat INT2,
-          sun INT2
-        )""");
+          sun INT2)""");
+  }
+
+  Future<bool> tableNotExist() async {
+    List<Map<String, dynamic>> queryRet;
+
+    queryRet = await this.database.rawQuery("""
+            SELECT COUNT(*) FROM ${this._tableName};"""
+            );
+    
+    return queryRet.isEmpty;
   }
 
   //insertAlarm(AlarmClock alarm) async {
@@ -115,23 +92,27 @@ class AlarmDatabase {
     // This holds the output of the database queries
     List<Map> retValue;
 
-    int nextID;
+    int _nextID;
 
     // Look first what the last clock was
     retValue = await this.database.rawQuery("""
-                SELECT id FROM alert_db ORDER BY id DESC;
+                SELECT id FROM ${this._tableName} ORDER BY id DESC;
                 """);
 
-    nextID = retValue[0]["id"] + 1;
+    // Be sure that it isn't the first entry
+    if (retValue.isNotEmpty)
+        _nextID = retValue[0]["id"] + 1;
+    else
+        _nextID = 1;
 
     // add the current alarm clock to the database
     this.database.rawQuery("""
-        INSERT INTO alert_db(id, name, time, name, active, 
+        INSERT INTO ${this._tableName} (id, time, name, active, 
                 mon, tue, wed, thu, fri, sat, sun)
         VALUES (
-                $nextID, 
-                ${alarmClock.name},
-                ${alarmClock.time},
+                $_nextID, 
+                '${alarmClock.time}',
+                '${alarmClock.name}',
                 ${alarmClock.active},
                 ${alarmClock.weekdays[0]},
                 ${alarmClock.weekdays[1]},
@@ -140,7 +121,8 @@ class AlarmDatabase {
                 ${alarmClock.weekdays[4]},
                 ${alarmClock.weekdays[5]},
                 ${alarmClock.weekdays[6]}
-            )""");
+            );"""
+        );
   }
 
   /*
@@ -148,8 +130,8 @@ class AlarmDatabase {
    */
   void removeAlarm(Map<String, dynamic> alarmClock) async {
     this.database.rawQuery("""
-        DELETE FROM ${this._name} WHERE id=${alarmClock['id']}
-        )""");
+        DELETE FROM ${this._tableName} WHERE id=${alarmClock['id']}
+        );""");
   }
 
   /*
@@ -157,8 +139,7 @@ class AlarmDatabase {
    */
   void updateAlarm(Map<String, dynamic> alarmClock) async {
     this.database.rawQuery("""
-        UPDATE ${this._name} SET
-            name=${alarmClock['name']},
+        UPDATE ${this._tableName} SET
             time=${alarmClock['time']},
             name=${alarmClock['name']},
             active=${alarmClock['active']},
@@ -169,7 +150,7 @@ class AlarmDatabase {
             fri=${alarmClock['weekdays'][4]},
             sat=${alarmClock['weekdays'][5]},
             sun=${alarmClock['weekdays'][6]}
-        WHERE id=${alarmClock['id']}
+        WHERE id=${alarmClock['id']};
             """);
   }
 
@@ -179,7 +160,7 @@ class AlarmDatabase {
    */
   Future<List<Map<String, dynamic>>> getAlarmClocks() async {
     return await this.database.rawQuery("""
-        SELECT * FROM alarm_db ORDER BY id;
+        SELECT * FROM ${this._tableName} ORDER BY id;
             """);
   }
 

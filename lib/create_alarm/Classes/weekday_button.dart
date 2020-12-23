@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import '../../Classes/alarm_clock.dart';
+
+class Selecter{
+    bool _isSelected;
+
+    bool isSelected() {
+        return this._isSelected;
+    }
+
+    void setSelected(bool value) {
+        this._isSelected = value;
+    }
+}
 
 class WeekDayButton extends StatefulWidget {
 
    // Represents the current alarm clock
-  final AlarmClock alarmClock;
-
-   // Points to the week day which is gonna be (un)set
-  final int weekDay;
+  final Selecter selecter;
 
   const WeekDayButton ({
-    this.alarmClock, 
-    this.weekDay, 
+    this.selecter, 
   });
 
   _WeekDayButtonState createState() => _WeekDayButtonState();
@@ -19,10 +26,8 @@ class WeekDayButton extends StatefulWidget {
 
 class _WeekDayButtonState extends State<WeekDayButton> {
 
-  bool _selected;
-
   _WeekDayButtonState() {
-    this._selected = false;
+    widget.selecter.setSelected(false);
   }
 
   /*
@@ -30,12 +35,10 @@ class _WeekDayButtonState extends State<WeekDayButton> {
     "selected" and "unselected".
    */
   void _toogleState() {
-    if (this._selected) {
-      this._selected = false;
-      widget.alarmClock.setWeekday(widget.weekDay);
+    if (widget.selecter.isSelected()) {
+        widget.selecter.setSelected(false);
     } else {
-      this._selected = true;
-      widget.alarmClock.unsetWeekday(widget.weekDay);
+        widget.selecter.setSelected(true);
     }
   }
 
@@ -45,7 +48,7 @@ class _WeekDayButtonState extends State<WeekDayButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: (this._selected
+      icon: (widget.selecter.isSelected()
           ? Icon(Icons.check_circle)
           : Icon(Icons.check_circle_outline)),
       onPressed: () {

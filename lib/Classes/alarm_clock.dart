@@ -49,6 +49,20 @@ class AlarmClock {
     this.weekdays[weekday] = 0;
   }
 
+  bool getWeekday(int index) {
+
+    // Control first, if the index is in a valid field
+    if (index < 7 && index >= 0) {
+        if (this.weekdays[index] == 1)
+            return true;
+        else
+            return false;
+    } else {
+        // Invalid index range
+        return null;
+    }
+  }
+
   //Map<String, dynamic> toMap() {
   //  return {
   //    'id': id,
