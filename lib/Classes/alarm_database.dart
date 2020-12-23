@@ -1,10 +1,10 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:wecker/Classes/alarm.dart';
 
-import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:io';
+
+import 'package:wecker/Classes/alarm_clock.dart';
 
 //https://www.codingpizza.com/en/storing-in-database-with-flutter/
 class AlarmDatabase {
@@ -63,9 +63,7 @@ class AlarmDatabase {
       // message might come up in the future.
       // TODO: Add Error popup for user
 
-    }
-
-    else {
+    } else {
       this.database = await openDatabase(databasePath, onCreate: _onCreate);
     }
   }
@@ -75,8 +73,7 @@ class AlarmDatabase {
      It creates the default table for the alarm clocks.
    */
   void _onCreate(Database db, int version) async {
-    await db.execute(
-        """CREATE TABLE AlarmClocks (
+    await db.execute("""CREATE TABLE AlarmClocks (
           id INTEGER PRIMARY KEY NOT NULL,
           time TEXT,
           name TEXT,
@@ -88,43 +85,90 @@ class AlarmDatabase {
           fri INT2,
           sat INT2,
           sun INT2
-        )"""
-      );
+        )""");
   }
 
-  insertAlarm(Alarm alarm) async {
-    var res = await this.database.insert(Alarm.TABLENAME, alarm.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-    return res;
+  //insertAlarm(AlarmClock alarm) async {
+  //  var res = await this.database.insert(Alarm.TABLENAME, alarm.toMap(),
+  //      conflictAlgorithm: ConflictAlgorithm.replace);
+  //  return res;
+  //}
+  /*
+    This function adds an alarm clock into the database.
+   */
+  void addAlarm(AlarmClock alarmClock) async {
+    // This holds the output of the database queries
+    List<Map> retValue;
+
+    int nextID;
+
+    // Look first what the last clock was
+    retValue = await this.database.rawQuery("""
+                SELECT id FROM alert_db ORDER BY id DESC;
+                """);
+
+    nextID = retValue[0]["id"] + 1;
+
+    // add the current alarm clock to the database
+    this.database.rawQuery("""
+        INSERT INTO alert_db(id, name, time, name, active, 
+                mon, tue, wed, thu, fri, sat, sun)
+        VALUES (
+                $nextID, 
+                ${alarmClock.name},
+                ${alarmClock.active},
+                ${alarmClock.weekdays[0]},
+                ${alarmClock.weekdays[1]},
+                ${alarmClock.weekdays[2]},
+                ${alarmClock.weekdays[3]},
+                ${alarmClock.weekdays[4]},
+                ${alarmClock.weekdays[5]},
+                ${alarmClock.weekdays[6]}
+            )""");
   }
 
-  Future<List<Alarm>> retrieveAlarms() async {
-    final List<Map<String, dynamic>> maps = await this.database.query(Alarm.TABLENAME);
+  /*
+   This function removes one clock in the database.
+   */
+  void removeAlarm(AlarmClock alarmClock) async {
 
-    return List.generate(maps.length, (i) {
-      return Alarm(
-          id: maps[i]['id'],
-          name: maps[i]['name'],
-          time: maps[i]['time'],
-          active: maps[i]['active'],
-          mon: maps[i]['mon'],
-          tue: maps[i]['tue'],
-          wed: maps[i]['wed'],
-          thu: maps[i]['thu'],
-          fri: maps[i]['fri'],
-          sat: maps[i]['sat'],
-          sun: maps[i]['sat']);
-    });
   }
 
-  updateAlarm(Alarm alarm) async {
-    await this.database.update(Alarm.TABLENAME, alarm.toMap(),
-        where: 'id = ?',
-        whereArgs: [alarm.id],
-        conflictAlgorithm: ConflictAlgorithm.replace);
+  /*
+    This function updates the values from a clock in the database.
+   */
+  void updateAlarm(AlarmClock alarmClock) async {
+
   }
 
-  deleteAlarm(int id) async {
-    this.database.delete(Alarm.TABLENAME, where: 'id = ?', whereArgs: [id]);
-  }
+  //Future<List<AlarmClock>> retrieveAlarms() async {
+  //  final List<Map<String, dynamic>> maps =
+  //      await this.database.query(Alarm.TABLENAME);
+
+  //  return List.generate(maps.length, (i) {
+  //    return AlarmClock(
+  //        id: maps[i]['id'],
+  //        name: maps[i]['name'],
+  //        time: maps[i]['time'],
+  //        active: maps[i]['active'],
+  //        mon: maps[i]['mon'],
+  //        tue: maps[i]['tue'],
+  //        wed: maps[i]['wed'],
+  //        thu: maps[i]['thu'],
+  //        fri: maps[i]['fri'],
+  //        sat: maps[i]['sat'],
+  //        sun: maps[i]['sat']);
+  //  });
+  //}
+
+  //updateAlarm(Alarm alarm) async {
+  //  await this.database.update(Alarm.TABLENAME, alarm.toMap(),
+  //      where: 'id = ?',
+  //      whereArgs: [alarm.id],
+  //      conflictAlgorithm: ConflictAlgorithm.replace);
+  //}
+
+  //deleteAlarm(int id) async {
+  //  this.database.delete(Alarm.TABLENAME, where: 'id = ?', whereArgs: [id]);
+  //}
 }
