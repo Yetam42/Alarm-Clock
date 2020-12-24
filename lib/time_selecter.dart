@@ -60,18 +60,6 @@ class _TimeSelecterState extends State<TimeSelecter> {
       });
   }
 
-  //String compare(zeug) {
-  //  String a = '';
-  //  if (zeug ==
-  //      formatDate(
-  //          DateTime(2020, 08, 1, DateTime.now().hour, DateTime.now().minute),
-  //          [hh, ':', nn, " ", am]).toString()) {
-  //    a = 'Yes';
-  //  }
-  //  //print(_selectTime(context));
-  //  return a;
-  //}
-
   @override
   void initState() {
     _timeController.text = formatDate(
@@ -128,17 +116,5 @@ class _TimeSelecterState extends State<TimeSelecter> {
         ),
       ],
     );
-
-//Erzeugt einen Knopf mit dem man manuell in die Datenbank hochladen kann
-    /*RaisedButton(
-            child: const Text('In Datenbank speicher'),
-              onPressed: () {
-                createData(_timeController.text);
-                print(_timeController.text);
-              }
-          ),*/
-    //    ],
-    //  ),
-    //);
   }
 }

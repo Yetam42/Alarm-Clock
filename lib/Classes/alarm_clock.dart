@@ -66,33 +66,4 @@ class AlarmClock {
         return null;
     }
   }
-
-  //Map<String, dynamic> toMap() {
-  //  return {
-  //    'id': id,
-  //    'time': time,
-  //    'name': name,
-  //    'active': active,
-  //    'mon': mon,
-  //    'tue': tue,
-  //    'wed': wed,
-  //    'thu': thu,
-  //    'fri': fri,
-  //    'sat': sat,
-  //    'sun': sun
-  //  };
-  //}
 }
-
-//final Test = Alarm(
-//    id: 1,
-//    time: '09:00 AM',
-//    name: 'Alarm',
-//    active: 0,
-//    mon: 0,
-//    tue: 0,
-//    wed: 0,
-//    thu: 0,
-//    fri: 0,
-//    sat: 0,
-//    sun: 0);
