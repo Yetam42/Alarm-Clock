@@ -48,8 +48,9 @@ class AlarmDatabase {
     this.database = await openDatabase(_databasePath, version: 1);
 
     // Test, if the table exists
-    if (await this.tableNotExist())
-        this._createTable();
+    if (await this.tableNotExist()) {
+      this._createTable();
+    }
 
     dev.log("Finished loading the database", name: "Loading database");
   }
@@ -67,7 +68,9 @@ class AlarmDatabase {
           thu INT2,
           fri INT2,
           sat INT2,
-          sun INT2)""");
+          sun INT2);""");
+
+    dev.log("Created table ${this._tableName}", name: "Creating table");
   }
 
   Future<bool> tableNotExist() async {

@@ -55,7 +55,6 @@ class _AclScreenState extends State<AclScreen> {
                     AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                     //AsyncSnapshot<String> snapshot) {
                         List<Widget> children;
-                        dev.log("Hello", name: this._logName);
                         if (snapshot.hasData) {
                             children = <Widget> [
                                 Text("${snapshot.data}"),
