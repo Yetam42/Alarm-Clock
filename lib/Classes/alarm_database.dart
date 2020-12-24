@@ -76,8 +76,13 @@ class AlarmDatabase {
       await this.database.rawQuery("""
             SELECT * FROM ${this._tableName};"""
       );
+
+      dev.log("Table ${this._tableName} doesn't exist!",
+          name: "Test if table exist");
       return true;
     } catch (error) {
+      dev.log("Table ${this._tableName} does exist!",
+          name: "Test if table exist");
       return false;
     }
   }
