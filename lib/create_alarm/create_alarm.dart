@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Classes/alarm_database.dart';
 import '../Classes/alarm_clock.dart';
-import 'Classes/weekday_button.dart';
 
 import 'dart:developer' as dev;
 
@@ -86,6 +85,12 @@ class _CreateAlarmState extends State<CreateAlarm> {
     } else {
         this._alarmClock.setWeekday(index);
     }
+
+    // update the selected days
+    setState(() {
+      this._alarmClock.getWeekday(index);
+    });
+    print("Toggling from $index, new value: ${this._alarmClock.getWeekday(index)}");
   }
 
   //  //print('nach togleState $day, $alarmDay');
@@ -191,7 +196,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Tue')
                 ],
               ),
-              // Wednesday
+            /* --------------
+             * Wednesday 
+             * -------------- */
               Column(
                 children: <Widget>[
                   IconButton(
@@ -206,7 +213,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Wed')
                 ],
               ),
-              // Thursday
+            /* -------------
+             * Thursday 
+             * ------------- */
               Column(
                 children: <Widget>[
                   IconButton(
@@ -221,7 +230,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Thu')
                 ],
               ),
-              // Friday
+            /* -----------
+             * Friday 
+             * ----------- */
               Column(
                 children: <Widget>[
                   IconButton(
@@ -236,7 +247,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Fri')
                 ],
               ),
-              // Saturday
+            /* -------------
+             * Saturday 
+             * ------------- */
               Column(
                 children: <Widget>[
                   IconButton(
@@ -251,7 +264,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   Text('Sat')
                 ],
               ),
-              // Sunnday
+            /* ------------
+             * Sunnday 
+             * ------------ */
               Column(
                 children: <Widget>[
                   IconButton(
@@ -259,7 +274,6 @@ class _CreateAlarmState extends State<CreateAlarm> {
                         ? Icon(Icons.check_circle)
                         : Icon(Icons.check_circle_outline)),
                     onPressed: () {
-                        print("Pressed: ${this._alarmClock.getWeekday(6)}");
                         this._toggleState(6);
                     },
                     color: Colors.red[400],

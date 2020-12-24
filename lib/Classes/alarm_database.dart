@@ -159,9 +159,21 @@ class AlarmDatabase {
     database ordered by their ID.
    */
   Future<List<Map<String, dynamic>>> getAlarmClocks() async {
-    return await this.database.rawQuery("""
-        SELECT * FROM ${this._tableName} ORDER BY id;
+    
+    List<Map<String, dynamic>> queryRet;
+
+    queryRet = await this.database.rawQuery("""
+            SELECT * FROM ${this._tableName} ORDER BY id;
             """);
+
+    //print("${queryRet[0]}");
+    print("What queryRet is:");
+    for (int index=0; index<queryRet.length; index++) {
+      print(queryRet[index]);
+    }
+    print("Wanted to get the clocks");
+
+    return queryRet;
   }
 
   //Future<List<AlarmClock>> retrieveAlarms() async {

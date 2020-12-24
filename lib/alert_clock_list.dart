@@ -21,9 +21,16 @@ class _AclScreenState extends State<AclScreen> {
 
   AlarmDatabase alarmDatabase;
 
-  _AclScreenState() {
-    this.alarmDatabase = AlarmDatabase("alarm_db");
-    this.alarmDatabase.loadDatabase();
+  @override
+  @protected
+  @mustCallSuper
+  void initState() {
+        this.alarmDatabase = AlarmDatabase("alarm_db");
+        this.alarmDatabase.loadDatabase();
+
+        print("Loaded database");
+
+      super.initState();
   }
 
   @override
@@ -33,9 +40,43 @@ class _AclScreenState extends State<AclScreen> {
         title: Text('List of all alarm clocks'),
       ),
       // Get the values from the list of alarm clocks
+      //body: Center(
+      //      child: FutureBuilder<List<Map<String, dynamic>>>
+      //      (
+      //          future: this.alarmDatabase.getAlarmClocks(),
+      //          builder: (
+      //              BuildContext context,
+      //              AsyncSnapshot<List<Map<String, dynamic>>> snapshot)
+      //              {
+      //                  List<Widget> children;
+
+      //                  if (snapshot.hasData) {
+      //                      children = <Widget> [
+      //                          Text("${snapshot.data[0]}"),
+      //                      ];
+      //                  } else {
+      //                      children = <Widget>[
+      //                          Text("Nein")
+      //                      ];
+      //                  }
+
+      //                  return Center(
+      //                          child: Column(
+      //                              mainAxisAlignment: MainAxisAlignment.center,
+      //                              crossAxisAlignment:
+      //                              CrossAxisAlignment.center,
+      //                              children: children,
+      //                                  ),
+      //                          );
+      //              }
+      //          )
+      //      )
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: this.alarmDatabase.getAlarmClocks(),
-        builder: (context, snapshot) {
+        builder: (
+                BuildContext context,
+                AsyncSnapshot<List<Map<String, dynamic>>> snapshot)
+        {
 
           if (snapshot.hasData) {
             return ListView.builder(
@@ -65,7 +106,7 @@ class _AclScreenState extends State<AclScreen> {
                             // Toogle the status of the alarm clock first
                             snapshot.data[index]["active"] =
                                     !snapshot.data[index]["active"];
-                            
+
                             // Save the new status in the database
                             this.alarmDatabase.updateAlarm(
                                     snapshot.data[index]

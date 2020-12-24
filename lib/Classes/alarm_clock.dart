@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 /*
   This class saves the neccessary information for the database. It has all
   information which are needed for an alarm clock.
@@ -50,6 +52,8 @@ class AlarmClock {
   }
 
   bool getWeekday(int index) {
+
+    dev.log("Weekday value: ${this.weekdays[index]}", name: "getWeekday");
 
     // Control first, if the index is in a valid field
     if (index < 7 && index >= 0) {
