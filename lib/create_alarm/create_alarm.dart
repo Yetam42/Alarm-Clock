@@ -5,9 +5,7 @@ import '../Classes/alarm_clock.dart';
 import 'dart:developer' as dev;
 
 class CreateAlarm extends StatefulWidget {
-  //final Alarm alarm;
 
-  //const CreateAlarm({Key key, this.alarm}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _CreateAlarmState();
 }

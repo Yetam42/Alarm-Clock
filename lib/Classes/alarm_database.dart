@@ -160,18 +160,17 @@ class AlarmDatabase {
    */
   Future<List<Map<String, dynamic>>> getAlarmClocks() async {
     
-    List<Map<String, dynamic>> queryRet;
+    Future<List<Map<String, dynamic>>> queryRet;
 
-    queryRet = await this.database.rawQuery("""
+    queryRet = this.database.rawQuery("""
             SELECT * FROM ${this._tableName} ORDER BY id;
             """);
 
     //print("${queryRet[0]}");
-    print("What queryRet is:");
-    for (int index=0; index<queryRet.length; index++) {
-      print(queryRet[index]);
-    }
-    print("Wanted to get the clocks");
+    dev.log("All alarm clocks:", name: "Getting alarm clocks");
+    //for (int index=0; index<queryRet.length; index++) {
+    //  dev.log("${queryRet[index]}", name: "Getting alarm clocks");
+    //}
 
     return queryRet;
   }
