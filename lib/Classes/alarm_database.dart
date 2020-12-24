@@ -71,13 +71,15 @@ class AlarmDatabase {
   }
 
   Future<bool> tableNotExist() async {
-    List<Map<String, dynamic>> queryRet;
 
-    queryRet = await this.database.rawQuery("""
-            SELECT COUNT(*) FROM ${this._tableName};"""
-            );
-    
-    return queryRet.isEmpty;
+    try {
+      await this.database.rawQuery("""
+            SELECT * FROM ${this._tableName};"""
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   //insertAlarm(AlarmClock alarm) async {
