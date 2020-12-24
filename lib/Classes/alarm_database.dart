@@ -37,7 +37,6 @@ class AlarmDatabase {
      than it creates a new database.
    */
   void loadDatabase() async {
-
     // Get the path of the database and the database itself from the path
     String _databasePath = join(await getDatabasesPath(), this._name) + '.db';
 
@@ -48,8 +47,9 @@ class AlarmDatabase {
     this.database = await openDatabase(_databasePath, version: 1);
 
     // Test, if the table exists
-    if (await this.tableNotExist())
-        this._createTable();
+    if (await this.tableNotExist()) {
+      this._createTable();
+    }
 
     dev.log("Finished loading the database", name: "Loading database");
   }
@@ -67,23 +67,21 @@ class AlarmDatabase {
           thu INT2,
           fri INT2,
           sat INT2,
-          sun INT2)""");
+          sun INT2);""");
   }
 
   Future<bool> tableNotExist() async {
-
     try {
       await this.database.rawQuery("""
-            SELECT * FROM ${this._tableName};"""
-      );
+            SELECT * FROM ${this._tableName};""");
 
       dev.log("Table ${this._tableName} does exist!",
           name: "Test if table exist");
-      return true;
+      return false;
     } catch (error) {
       dev.log("Table ${this._tableName} doesn't exist!",
           name: "Test if table exist");
-      return false;
+      return true;
     }
   }
 
@@ -108,9 +106,9 @@ class AlarmDatabase {
 
     // Be sure that it isn't the first entry
     if (retValue.isNotEmpty)
-        _nextID = retValue[0]["id"] + 1;
+      _nextID = retValue[0]["id"] + 1;
     else
-        _nextID = 1;
+      _nextID = 1;
 
     // add the current alarm clock to the database
     this.database.rawQuery("""
@@ -128,8 +126,7 @@ class AlarmDatabase {
                 ${alarmClock.weekdays[4]},
                 ${alarmClock.weekdays[5]},
                 ${alarmClock.weekdays[6]}
-            );"""
-        );
+            );""");
   }
 
   /*
@@ -166,7 +163,6 @@ class AlarmDatabase {
     database ordered by their ID.
    */
   Future<List<Map<String, dynamic>>> getAlarmClocks() async {
-    
     Future<List<Map<String, dynamic>>> queryRet;
 
     queryRet = this.database.rawQuery("""
