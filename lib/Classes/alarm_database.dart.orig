@@ -68,8 +68,11 @@ class AlarmDatabase {
           fri INT2,
           sat INT2,
           sun INT2);""");
+<<<<<<< HEAD
 
     dev.log("Created table ${this._tableName}", name: "Creating table");
+=======
+>>>>>>> aa937ac85f8e651cff4c49c25fad5a2457198368
   }
 
   Future<bool> tableNotExist() async {
