@@ -37,7 +37,7 @@ class AlarmDatabase {
      This function loads the database from its path. If it doesn't exist
      than it creates a new database.
    */
-   Future<int> loadDatabase() async {
+   Future<void> loadDatabase() async {
     // Get the path of the database and the database itself from the path
     String _databasePath = join(await getDatabasesPath(), this._name) + '.db';
 

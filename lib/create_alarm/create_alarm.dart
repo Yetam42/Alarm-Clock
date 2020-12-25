@@ -51,7 +51,6 @@ class _CreateAlarmState extends State<CreateAlarm> {
         name: "Create Alarm Clock");
   }
 
-  //https://flutter.dev/docs/development/ui/interactive
   void _toggleState(int index) async {
     if (this._alarmClock.getWeekday(index)) {
       this._alarmClock.unsetWeekday(index);
@@ -85,6 +84,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
       ),
       body: Column(
         children: <Widget>[
+
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -95,6 +95,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
               controller: _nameTextController,
             ),
           ),
+
           TextField(
             textAlign: TextAlign.center,
             readOnly: true,
@@ -237,6 +238,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
           )
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
