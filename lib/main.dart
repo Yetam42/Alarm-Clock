@@ -1,95 +1,50 @@
+/* =======================
+ * Imports
+ * ======================= */
 import 'package:flutter/material.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:wecker/SelectTime.dart';
-import 'package:wecker/BrightnessWidget.dart';
-import 'package:wecker/kp.dart';
-import 'package:wecker/WeckerErstellen.dart';
-import 'test.dart';
+import 'package:wecker/alert_clock_list.dart';
+import 'package:wecker/old_screen.dart';
+import 'create_alarm/create_alarm.dart';
 
+import 'dart:developer' as dev;
 
 void main() {
+  dev.log("Application installed!", name: "Application");
+
   runApp(MaterialApp(initialRoute: '/', routes: {
-    '/': (context) => HomeScreen(),
-    '/second': (context) => WeckerErstellen(),
-    '/third': (context) => MyApp(),
+    '/': (context) => _HomeScreen(),
+    '/createAlarmClock': (context) => CreateAlarm(),
+    '/oldscreen': (context) => OldScreen(),
     '/forth': (context) => CreateAlarm(),
-    '/5': (context) => Listenscreen()
+    '/AlarmClockListScreen': (context) => AclScreen()
   }));
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  //var actic = Wecker(id: 0, time: '10:00 AM', name: 'Actic', active: true);
+/* =======================
+ * The main routes
+ * ======================= */
+class _HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ringtone player'),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: RaisedButton(
-                child: const Text('playAlarm'),
-                onPressed: () {
-                  FlutterRingtonePlayer.playAlarm();
-                },
-              ),
-            ),
-            BrightnessWidget(),
-            DateTimePicker(),
-            RaisedButton(
-              child: Text('Zurück zum Hauptbildschrim'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sunshine'),
-        backgroundColor: Colors.orange,
+        title: Text('Super Alter App (DEV -- Version!'),
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(children: <Widget>[
           RaisedButton(
-            child: Text('Neuer Wecker'),
-            onPressed: () {
-              Navigator.pushNamed((context), '/second');
-            },
-          ),
-          RaisedButton(
-              child: Text('Alter Screen'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/third');
-              }),
-          RaisedButton(
-              child: Text('Test1'),
+              child: Text('Create Alarm'),
               onPressed: () {
                 Navigator.pushNamed(context, '/forth');
               }),
           RaisedButton(
-            child: Text('Liste'),
+            child: Text('Alarm Clock List'),
             onPressed: () {
-              Navigator.pushNamed(context, '/5');
+              Navigator.pushNamed(context, '/AlarmClockListScreen');
             },
-          )
+          ),
         ]),
       ),
     );
