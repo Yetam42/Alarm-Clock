@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
-import '../Classes/alarm_database.dart';
-import '../Classes/alarm_clock.dart';
+
+import 'Classes/alarm_clock.dart';
+import 'Classes/alarm_database.dart';
 
 import 'dart:developer' as dev;
 
-class CreateAlarm extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _CreateAlarmState();
+/*
+
+ */
+class AlarmClockHandlerArgs {
+  /*
+     True => This widget is called in order to *add* an alarm clock.
+     False => This widget is called in order to *update* an alarm clock.
+     */
+  final bool modeConfigure;
+  final AlarmClock alarmClock;
+
+  AlarmClockHandlerArgs(this.modeConfigure, this.alarmClock);
 }
 
-class _CreateAlarmState extends State<CreateAlarm> {
+
+class AlarmClockHandler extends StatefulWidget {
+  /*
+     True => This widget is called in order to *add* an alarm clock.
+     False => This widget is called in order to *update* an alarm clock.
+     */
+  final bool adding;
+
+  AlarmClockHandler({
+    this.adding,
+  });
+
+  @override
+  _HandleAlarmClock createState() => _HandleAlarmClock();
+}
+
+class _HandleAlarmClock extends State<AlarmClockHandler> {
+
+  /* ===============
+   * Attributes 
+   * =============== */
   AlarmDatabase _alarmDatabase;
 
   // All values of the alarmclock are gonna saved here
@@ -19,27 +49,12 @@ class _CreateAlarmState extends State<CreateAlarm> {
   TextEditingController _timeTextController;
   TextEditingController _nameTextController;
 
-  /* ---------------
-   * "Conctructor"
-   * --------------- */
-  @protected
-  @mustCallSuper
-  void initState() {
-    // Load the database
-    this._alarmDatabase = AlarmDatabase('alarm_db');
-    this._alarmDatabase.loadDatabase();
+  // Here are all arguments which are provided
+  AlarmClockHandlerArgs _args;
 
-    // Prepare the variables
-    this._alarmClock = AlarmClock();
-    _timeTextController = TextEditingController();
-    _nameTextController = TextEditingController();
-
-    dev.log("Initialised the default variables",
-        name: "Create Alarm Constructor");
-
-    super.initState();
-  }
-
+  /* ==============
+   * Functions 
+   * ============== */
   // This saves the alarm clock into the database
   void _saveAlarmClock() {
     this._alarmClock.name = this._nameTextController.text.toString();
@@ -69,22 +84,64 @@ class _CreateAlarmState extends State<CreateAlarm> {
 
   @override
   void dispose() {
-    _timeTextController.dispose();
-    _nameTextController.dispose();
+    this._timeTextController.dispose();
+    this._nameTextController.dispose();
     super.dispose();
   }
 
-  /* -----------------
-   * Widget Build 
-   * ----------------- */
+  /* ==================
+   * Actual widget 
+   * ================== */
+  @override
   Widget build(BuildContext context) {
+    /* -----------------
+     * Preparations 
+     * ----------------- */
+    // Load the database
+    this._alarmDatabase = AlarmDatabase('alarm_db');
+    this._alarmDatabase.loadDatabase();
+
+    // Get to know what to do with the clock:
+    // Creating a new one or configuring an existing one?
+    this._args = ModalRoute.of(context).settings.arguments;
+
+    // Prepare the variables
+    this._alarmClock = AlarmClock();
+    this._timeTextController = TextEditingController();
+    this._nameTextController = TextEditingController();
+
+    // The user just wants to config a current alarm clock
+    if (this._args.modeConfigure) {
+      // Use the provided alarm clock and set the values
+      this._timeTextController.text = this._args.alarmClock.time;
+      this._nameTextController.text = this._args.alarmClock.name;
+
+      // Set the values to the alarmClock alias
+      this._alarmClock.name = this._args.alarmClock.name;
+      this._alarmClock.time = this._args.alarmClock.time;
+      this._alarmClock.weekdays = this._args.alarmClock.weekdays;
+
+      dev.log(
+          "Loaded variables for configuring mode.",
+          name: "Alarm Handler"
+      );
+    }
+
+    dev.log(
+        "Initialised the default variables",
+        name: "Alarm Handler"
+    );
+
+    /* ----------------------
+     * The actual widget 
+     * ---------------------- */
     return Scaffold(
       appBar: AppBar(
         title: Text('Create new Alarm Clock'),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
-
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -95,7 +152,6 @@ class _CreateAlarmState extends State<CreateAlarm> {
               controller: _nameTextController,
             ),
           ),
-
           TextField(
             textAlign: TextAlign.center,
             readOnly: true,
@@ -109,13 +165,13 @@ class _CreateAlarmState extends State<CreateAlarm> {
           ),
 
           /* ==========================
-           * The weekdays listed in a row 
+           * The weekdays listed in a row
            * ========================== */
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               /* -----------
-                 * Monday 
+                 * Monday
                  * ----------- */
               Column(
                 children: <Widget>[
@@ -133,7 +189,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
               ),
 
               /* ------------
-               * Tuesday 
+               * Tuesday
                * ------------ */
               Column(
                 children: <Widget>[
@@ -150,7 +206,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                 ],
               ),
               /* --------------
-             * Wednesday 
+             * Wednesday
              * -------------- */
               Column(
                 children: <Widget>[
@@ -167,7 +223,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                 ],
               ),
               /* -------------
-             * Thursday 
+             * Thursday
              * ------------- */
               Column(
                 children: <Widget>[
@@ -184,7 +240,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                 ],
               ),
               /* -----------
-             * Friday 
+             * Friday
              * ----------- */
               Column(
                 children: <Widget>[
@@ -201,7 +257,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                 ],
               ),
               /* -------------
-             * Saturday 
+             * Saturday
              * ------------- */
               Column(
                 children: <Widget>[
@@ -218,7 +274,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
                 ],
               ),
               /* ------------
-             * Sunnday 
+             * Sunnday
              * ------------ */
               Column(
                 children: <Widget>[
@@ -238,14 +294,31 @@ class _CreateAlarmState extends State<CreateAlarm> {
           )
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
+            // Check first, if the user provided enough information
+            if (this._nameTextController.text.isEmpty) {
+              // showDialog(
+              //   context: context,
+              //   builder: (context) {
+              //       return AlertDialog(
+              //           title: Text("Please enter a Name!"),
+              //           titleTextStyle: TextStyle(fontWeight: FontWeight.bold),
+              //           content:
+              //           Text("Please enter a name of your alarm clock!"),
+              //           actions: [
+              //               FlatButton(child: Text("Bruh"), onPressed: () {}),
+              //           ]
+              //       );
+              //   }
+              //   );
+              print("Yes");
+            }
             this._saveAlarmClock();
             Navigator.pop(context, "Alarm Clock saved");
-            setState(() {});
 
+            setState(() {});
             dev.log("Pressed the save button.", name: "Create Alarm Clock");
           }),
     );
