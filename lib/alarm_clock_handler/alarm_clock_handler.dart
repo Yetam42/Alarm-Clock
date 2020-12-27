@@ -41,6 +41,8 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
    * =============== */
   AlarmDatabase _alarmDatabase;
 
+  final _debugName = "Alarm Clock Handler";
+
   // All values of the alarmclock are gonna saved here
   AlarmClock _alarmClock;
 
@@ -85,9 +87,9 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
 
       this._widgetTitle = "Configure alarm clock";
 
-      dev.log("Loaded variables for configuring mode.", name: "Alarm Handler");
+      dev.log("Loaded variables for configuring mode.", name: this._debugName);
 
-      dev.log("Goes to configure - mode", name: "Alarm Clock Handler");
+      dev.log("Goes to configure - mode", name: this._debugName);
     }
     // The user wants to create a new alarm clock
     else {
@@ -103,7 +105,7 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
         this._widgetTitle = "Create new alarm clock";
     }
 
-    dev.log("Initialised all values.", name: "Alarm Clock Handler");
+    dev.log("Initialised all values.", name: this._debugName);
   }
 
   /* ==============
@@ -131,7 +133,7 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
     setState(() {});
 
     dev.log("Toggling from $index to: ${this._alarmClock.getWeekday(index)}.",
-        name: "Create Alarm Clock");
+        name: this._debugName);
   }
 
   @override
@@ -317,24 +319,6 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            // Check first, if the user provided enough information
-            if (this._nameTextController.text.isEmpty) {
-              // showDialog(
-              //   context: context,
-              //   builder: (context) {
-              //       return AlertDialog(
-              //           title: Text("Please enter a Name!"),
-              //           titleTextStyle: TextStyle(fontWeight: FontWeight.bold),
-              //           content:
-              //           Text("Please enter a name of your alarm clock!"),
-              //           actions: [
-              //               FlatButton(child: Text("Bruh"), onPressed: () {}),
-              //           ]
-              //       );
-              //   }
-              //   );
-              print("Yes");
-            }
 
             // Look if the user wanted to create a new alarm clock or
             // did he/her just changed the settings?
