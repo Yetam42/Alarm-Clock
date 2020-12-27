@@ -1,14 +1,24 @@
-import 'package:flutter/material.dart';
-
-import 'Classes/alarm_clock.dart';
-import 'Classes/alarm_database.dart';
-
 import 'dart:developer' as dev;
 
-/*
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../Classes/alarm_clock.dart';
+import '../Classes/alarm_database.dart';
+
+/*
+   This function represents all needed information in order to call the
+   "AlarmClockHandler" widget.
  */
 class AlarmClockHandlerArgs {
+
+    final bool modeConfigure;
+    final AlarmClock alarmClock;
+
+    AlarmClockHandlerArgs(this.modeConfigure, this.alarmClock);
+}
+
+class AlarmClockHandler extends StatefulWidget {
   /*
      True => This widget is called in order to *add* an alarm clock.
      False => This widget is called in order to *update* an alarm clock.
@@ -16,27 +26,16 @@ class AlarmClockHandlerArgs {
   final bool modeConfigure;
   final AlarmClock alarmClock;
 
-  AlarmClockHandlerArgs(this.modeConfigure, this.alarmClock);
-}
-
-
-class AlarmClockHandler extends StatefulWidget {
-  /*
-     True => This widget is called in order to *add* an alarm clock.
-     False => This widget is called in order to *update* an alarm clock.
-     */
-  final bool adding;
-
   AlarmClockHandler({
-    this.adding,
+    this.modeConfigure,
+    this.alarmClock,
   });
 
   @override
-  _HandleAlarmClock createState() => _HandleAlarmClock();
+  _AlarmClockHandler createState() => _AlarmClockHandler();
 }
 
-class _HandleAlarmClock extends State<AlarmClockHandler> {
-
+class _AlarmClockHandler extends State<AlarmClockHandler> {
   /* ===============
    * Attributes 
    * =============== */
@@ -49,16 +48,71 @@ class _HandleAlarmClock extends State<AlarmClockHandler> {
   TextEditingController _timeTextController;
   TextEditingController _nameTextController;
 
-  // Here are all arguments which are provided
-  AlarmClockHandlerArgs _args;
+  String _widgetTitle;
+
+  /* ----------------
+   * "Constructor"
+   * ---------------- */
+  @protected
+  @override
+  void initState() {
+    /*
+        This function is needed, because we can't initialize everything in
+        the build function since it's always called after if we call the
+        "setState(() {})" function.
+    */
+    super.initState();
+
+    // Load the database
+    this._alarmDatabase = AlarmDatabase('alarm_db');
+    this._alarmDatabase.loadDatabase();
+
+    // Prepare the variables
+    this._alarmClock = AlarmClock();
+    this._timeTextController = TextEditingController();
+    this._nameTextController = TextEditingController();
+
+    // The user just wants to config a current alarm clock
+    if (this.widget.modeConfigure) {
+      // Use the provided alarm clock and set the values
+      this._nameTextController.text = this.widget.alarmClock.name;
+      this._timeTextController.text = this.widget.alarmClock.time;
+
+      // Set the values to the alarmClock alias
+      this._alarmClock.name = this.widget.alarmClock.name;
+      this._alarmClock.time = this.widget.alarmClock.time;
+      this._alarmClock.weekdays = this.widget.alarmClock.weekdays;
+
+      this._widgetTitle = "Configure alarm clock";
+
+      dev.log("Loaded variables for configuring mode.", name: "Alarm Handler");
+
+      dev.log("Goes to configure - mode", name: "Alarm Clock Handler");
+    }
+    // The user wants to create a new alarm clock
+    else {
+        this._nameTextController.text = "Alarm Clock";
+
+        // Add a default time which is the next hour
+        this._timeTextController.text =
+                DateFormat.jm().format(DateTime.now().add(Duration(hours: 1)));
+
+        for (int index=0; index<7; index++)
+            this._alarmClock.weekdays[index] = 0;
+
+        this._widgetTitle = "Create new alarm clock";
+    }
+
+    dev.log("Initialised all values.", name: "Alarm Clock Handler");
+  }
 
   /* ==============
    * Functions 
    * ============== */
   // This saves the alarm clock into the database
   void _saveAlarmClock() {
-    this._alarmClock.name = this._nameTextController.text.toString();
-    this._alarmClock.time = this._timeTextController.text.toString();
+    this._alarmClock.name = this._nameTextController.text;
+    this._alarmClock.time = this._timeTextController.text;
     this._alarmClock.active = 1;
 
     this._alarmDatabase.addAlarm(this._alarmClock);
@@ -74,12 +128,10 @@ class _HandleAlarmClock extends State<AlarmClockHandler> {
     }
 
     // update the selected days
-    setState(() {
-      this._alarmClock.getWeekday(index);
-    });
+    setState(() {});
 
     dev.log("Toggling from $index to: ${this._alarmClock.getWeekday(index)}.",
-            name: "Create Alarm Clock");
+        name: "Create Alarm Clock");
   }
 
   @override
@@ -94,50 +146,12 @@ class _HandleAlarmClock extends State<AlarmClockHandler> {
    * ================== */
   @override
   Widget build(BuildContext context) {
-    /* -----------------
-     * Preparations 
-     * ----------------- */
-    // Load the database
-    this._alarmDatabase = AlarmDatabase('alarm_db');
-    this._alarmDatabase.loadDatabase();
-
-    // Get to know what to do with the clock:
-    // Creating a new one or configuring an existing one?
-    this._args = ModalRoute.of(context).settings.arguments;
-
-    // Prepare the variables
-    this._alarmClock = AlarmClock();
-    this._timeTextController = TextEditingController();
-    this._nameTextController = TextEditingController();
-
-    // The user just wants to config a current alarm clock
-    if (this._args.modeConfigure) {
-      // Use the provided alarm clock and set the values
-      this._timeTextController.text = this._args.alarmClock.time;
-      this._nameTextController.text = this._args.alarmClock.name;
-
-      // Set the values to the alarmClock alias
-      this._alarmClock.name = this._args.alarmClock.name;
-      this._alarmClock.time = this._args.alarmClock.time;
-      this._alarmClock.weekdays = this._args.alarmClock.weekdays;
-
-      dev.log(
-          "Loaded variables for configuring mode.",
-          name: "Alarm Handler"
-      );
-    }
-
-    dev.log(
-        "Initialised the default variables",
-        name: "Alarm Handler"
-    );
-
     /* ----------------------
      * The actual widget 
      * ---------------------- */
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create new Alarm Clock'),
+        title: Text(this._widgetTitle),
         centerTitle: true,
       ),
       body: Column(
@@ -158,9 +172,15 @@ class _HandleAlarmClock extends State<AlarmClockHandler> {
             controller: _timeTextController,
             decoration: InputDecoration(hintText: 'Select time'),
             onTap: () async {
-              var time = await showTimePicker(
-                  context: context, initialTime: TimeOfDay.now());
-              _timeTextController.text = time.format(context);
+              TimeOfDay time = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now()
+                );
+
+              // Test first, if the user provided any time
+              if (time != null) {
+                _timeTextController.text = time.format(context);
+              }
             },
           ),
 
@@ -315,7 +335,15 @@ class _HandleAlarmClock extends State<AlarmClockHandler> {
               //   );
               print("Yes");
             }
-            this._saveAlarmClock();
+
+            // Look if the user wanted to create a new alarm clock or
+            // did he/her just changed the settings?
+            if (widget.modeConfigure) {
+              this._alarmDatabase.updateAlarm(this._alarmClock);
+            } else {
+              this._saveAlarmClock();
+            }
+
             Navigator.pop(context, "Alarm Clock saved");
 
             setState(() {});

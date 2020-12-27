@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wecker/alarm_clock_handler.dart';
 import 'Classes/alarm_clock.dart';
 import 'Classes/alarm_database.dart';
+import 'alarm_clock_handler/alarm_clock_handler.dart';
 
 class AlarmHelper {
   double _screenWidth;
@@ -96,11 +96,16 @@ class AlarmHelper {
                 key: UniqueKey(),
                 direction: DismissDirection.endToStart,
                 onDismissed: (_) {
+
                   // Remove the alarm clock from the databse
                   this._alarmDatabase.removeAlarm(allAlarmClocks[index]);
 
-                  // And refresh the array of alarm clocks
-                  allAlarmClocks.removeAt(index);
+                  ownSetState(() {
+                    // Reload the list but remove the alarm Clock from
+                    // the list first
+                    allAlarmClocks.removeAt(index);
+                    }
+                  );
                 },
                 /*
                  Display on each card on the left:

@@ -3,7 +3,7 @@
  * ======================= */
 import 'Classes/alarm_database.dart';
 import 'Classes/alarm_clock.dart';
-import 'alarm_clock_handler.dart';
+import 'alarm_clock_handler/alarm_clock_handler.dart';
 import 'main_helper.dart';
 
 import 'package:async_builder/async_builder.dart';
@@ -14,16 +14,51 @@ import 'dart:developer' as dev;
 void main() {
   dev.log("Application installed!", name: "Application");
 
-  runApp(MaterialApp(initialRoute: '/', routes: {
-    '/': (context) => HomeScreen(),
-    '/AlarmClockHandler': (context) => AlarmClockHandler(),
-  }));
+  runApp(MaterialApp(
+    home: HomeScreen(),
+    // Handles the arguments which should be given to each widget
+    onGenerateRoute: (RouteSettings nextWidget) {
+        
+        // Look which widget is gonna open
+        if (nextWidget.name == "/AlarmClockHandler") {
+
+            // Get all needed arguments for the AlarmClockHandler
+            final AlarmClockHandlerArgs _args = nextWidget.arguments;
+
+            return MaterialPageRoute(
+                builder: (context) {
+                    return AlarmClockHandler(
+                        modeConfigure: _args.modeConfigure,
+                        alarmClock: _args.alarmClock,
+                    );
+                }
+            );
+        }
+
+        // Unknown widget
+        return MaterialPageRoute(
+            builder: (context) {
+                return Column(
+                    children: <Widget> [
+                        Text("Congratulation!"),
+                        Text("You just found a bug :D"),
+                        Text("Please report it on github and create an issue!"),
+                        Text("And add a description what you did to create"),
+                        Text("this bug."),
+                    ],
+                );
+            }
+        );
+    },
+    )
+   );
 }
 
 /* ===================
  * The mainscreen 
  * =================== */
 class HomeScreen extends StatefulWidget {
+
   @override
   _HomeScreen createState() => _HomeScreen();
 }
@@ -42,6 +77,7 @@ class _HomeScreen extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     /* =================
      * Preparations 
      * ================= */
@@ -56,7 +92,7 @@ class _HomeScreen extends State<HomeScreen> {
      * ====================== */
     return Scaffold(
       appBar: AppBar(
-        title: Text('List of all alarm clocks'),
+        title: Text('Alarm Clocks'),
         centerTitle: true,
       ),
       /* ---------------------------------------
@@ -69,7 +105,9 @@ class _HomeScreen extends State<HomeScreen> {
             Navigator.pushNamed(
               context,
               '/AlarmClockHandler',
-              arguments: AlarmClockHandlerArgs(false, null),
+              arguments: AlarmClockHandlerArgs(
+                      false,
+                      null),
             )
             // After adding a new alarm clock, refresh the list to display it
             .then((value) => setState(() {}));
