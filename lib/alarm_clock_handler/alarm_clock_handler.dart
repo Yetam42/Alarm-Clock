@@ -160,12 +160,18 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
             textAlign: TextAlign.center,
             readOnly: true,
             controller: _timeTextController,
-            decoration: InputDecoration(hintText: 'Select time'),
+            decoration: InputDecoration(
+                hintText: 'Select time',
+                hintStyle: TextStyle(fontWeight: FontWeight.bold)
+            ),
             onTap: () async {
               TimeOfDay time = await showTimePicker(
                   context: context,
-                  initialTime: TimeOfDay.now()
-                );
+                  initialTime: TimeOfDay(
+                      hour: TimeOfDay.now().hour + 1,
+                      minute: TimeOfDay.now().minute
+                      ),
+              );
 
               // Test first, if the user provided any time
               if (time != null) {
