@@ -6,7 +6,7 @@ import 'dart:developer' as dev;
 */
 class AlarmClock {
   int id;
-  String time;
+  String time; // Saved in this format: "<hour>:<minute> <AM/PM>"
   String name;
 
   int active;

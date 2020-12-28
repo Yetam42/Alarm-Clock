@@ -136,7 +136,8 @@ class AlarmHelper {
                         }),
                     // Update the alarm clock in the database
                     onTap: () async {
-                      // Go to the editing page first
+                      // Go to the editing page first than refresh the alarm
+                      // clock list next
                       Navigator.pushNamed(
                           context,
                           "/AlarmClockHandler",
@@ -144,12 +145,7 @@ class AlarmHelper {
                             true,
                             allAlarmClocks[index]
                           ),
-                      );
-
-                      // Save the new informations
-                      this
-                          ._alarmDatabase
-                          .updateAlarm(allAlarmClocks[index]);
+                      ).whenComplete(() => ownSetState(() {}));
                     },
                   ),
                 ),

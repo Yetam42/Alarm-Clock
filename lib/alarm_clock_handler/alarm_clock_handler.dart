@@ -61,7 +61,7 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
     /*
         This function is needed, because we can't initialize everything in
         the build function since it's always called after if we call the
-        "setState(() {})" function.
+        "setState(() {})" function. This would create avoidable initialisations.
     */
     super.initState();
 
@@ -81,6 +81,7 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
       this._timeTextController.text = this.widget.alarmClock.time;
 
       // Set the values to the alarmClock alias
+      this._alarmClock.id = this.widget.alarmClock.id;
       this._alarmClock.name = this.widget.alarmClock.name;
       this._alarmClock.time = this.widget.alarmClock.time;
       this._alarmClock.weekdays = this.widget.alarmClock.weekdays;
@@ -88,8 +89,6 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
       this._widgetTitle = "Configure alarm clock";
 
       dev.log("Loaded variables for configuring mode.", name: this._debugName);
-
-      dev.log("Goes to configure - mode", name: this._debugName);
     }
     // The user wants to create a new alarm clock
     else {
@@ -111,17 +110,6 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
   /* ==============
    * Functions 
    * ============== */
-  // This saves the alarm clock into the database
-  void _saveAlarmClock() {
-    this._alarmClock.name = this._nameTextController.text;
-    this._alarmClock.time = this._timeTextController.text;
-    this._alarmClock.active = 1;
-
-    this._alarmDatabase.addAlarm(this._alarmClock);
-    dev.log("Saved the current configured alarm clock.",
-        name: "Create Alarm Clock");
-  }
-
   void _toggleState(int index) async {
     if (this._alarmClock.getWeekday(index)) {
       this._alarmClock.unsetWeekday(index);
@@ -320,18 +308,24 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
           child: Icon(Icons.check),
           onPressed: () {
 
+            // Save the changed values into the alarm clock
+            this._alarmClock.name = this._nameTextController.text;
+            this._alarmClock.time = this._timeTextController.text;
+            this._alarmClock.active = 1;
+
             // Look if the user wanted to create a new alarm clock or
             // did he/her just changed the settings?
             if (widget.modeConfigure) {
               this._alarmDatabase.updateAlarm(this._alarmClock);
             } else {
-              this._saveAlarmClock();
+              this._alarmDatabase.addAlarm(this._alarmClock);
             }
 
+            dev.log(
+                "Saving changes to the alarm clock",
+                name: "Alarm Clock Handler"
+            );
             Navigator.pop(context, "Alarm Clock saved");
-
-            setState(() {});
-            dev.log("Pressed the save button.", name: "Create Alarm Clock");
           }),
     );
   }

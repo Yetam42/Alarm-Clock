@@ -18,47 +18,39 @@ void main() {
     home: HomeScreen(),
     // Handles the arguments which should be given to each widget
     onGenerateRoute: (RouteSettings nextWidget) {
-        
-        // Look which widget is gonna open
-        if (nextWidget.name == "/AlarmClockHandler") {
+      // Look which widget is gonna open
+      if (nextWidget.name == "/AlarmClockHandler") {
+        // Get all needed arguments for the AlarmClockHandler
+        final AlarmClockHandlerArgs _args = nextWidget.arguments;
 
-            // Get all needed arguments for the AlarmClockHandler
-            final AlarmClockHandlerArgs _args = nextWidget.arguments;
+        return MaterialPageRoute(builder: (context) {
+          return AlarmClockHandler(
+            modeConfigure: _args.modeConfigure,
+            alarmClock: _args.alarmClock,
+          );
+        });
+      }
 
-            return MaterialPageRoute(
-                builder: (context) {
-                    return AlarmClockHandler(
-                        modeConfigure: _args.modeConfigure,
-                        alarmClock: _args.alarmClock,
-                    );
-                }
-            );
-        }
-
-        // Unknown widget
-        return MaterialPageRoute(
-            builder: (context) {
-                return Column(
-                    children: <Widget> [
-                        Text("Congratulation!"),
-                        Text("You just found a bug :D"),
-                        Text("Please report it on github and create an issue!"),
-                        Text("And add a description what you did to create"),
-                        Text("this bug."),
-                    ],
-                );
-            }
+      // Unknown widget
+      return MaterialPageRoute(builder: (context) {
+        return Column(
+          children: <Widget>[
+            Text("Congratulation!"),
+            Text("You just found a bug :D"),
+            Text("Please report it on github and create an issue!"),
+            Text("And add a description what you did to create"),
+            Text("this bug."),
+          ],
         );
+      });
     },
-    )
-   );
+  ));
 }
 
 /* ===================
- * The mainscreen 
+ * The mainscreen
  * =================== */
 class HomeScreen extends StatefulWidget {
-
   @override
   _HomeScreen createState() => _HomeScreen();
 }
@@ -77,9 +69,8 @@ class _HomeScreen extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     /* =================
-     * Preparations 
+     * Preparations
      * ================= */
     // load the database
     this._alarmDatabase = AlarmDatabase("alarm_db");
@@ -88,7 +79,7 @@ class _HomeScreen extends State<HomeScreen> {
     this._alarmHelper = AlarmHelper(context);
 
     /* ======================
-     * Actual Homescreen 
+     * Actual Homescreen
      * ====================== */
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +87,7 @@ class _HomeScreen extends State<HomeScreen> {
         centerTitle: true,
       ),
       /* ---------------------------------------
-       * Button to create a new alarm clock 
+       * Button to create a new alarm clock
        * --------------------------------------- */
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -105,12 +96,10 @@ class _HomeScreen extends State<HomeScreen> {
             Navigator.pushNamed(
               context,
               '/AlarmClockHandler',
-              arguments: AlarmClockHandlerArgs(
-                      false,
-                      null),
+              arguments: AlarmClockHandlerArgs(false, null),
             )
-            // After adding a new alarm clock, refresh the list to display it
-            .then((value) => setState(() {}));
+                // After adding a new alarm clock, refresh the list to display it
+                .then((value) => setState(() {}));
           }),
       /* ----------------------------
        * All alarm clocks listed
@@ -130,9 +119,12 @@ class _HomeScreen extends State<HomeScreen> {
            * Listing of all alarm clocks
            * -------------------------------- */
           builder: (context, List<AlarmClock> allAlarmClocks) {
-            return this
-                ._alarmHelper
-                .getAlarmClocksList(context, allAlarmClocks, setState);
+
+            return this._alarmHelper.getAlarmClocksList(
+                context,
+                allAlarmClocks,
+                setState
+            );
           }),
     );
   }
