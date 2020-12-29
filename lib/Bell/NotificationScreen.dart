@@ -85,7 +85,7 @@ class _LightSensorWidgetState extends State<LightSensorWidget> {
   Widget build(BuildContext context) {
     if (lightOn(_luxString)) {
       return RaisedButton(
-          child: Text('Stop'),
+          child: Text('Stop and go back to List'),
           onPressed: () async {
             stopListening();
             FlutterRingtonePlayer.stop();
