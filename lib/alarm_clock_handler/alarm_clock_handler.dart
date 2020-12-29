@@ -6,16 +6,17 @@ import 'package:intl/intl.dart';
 import '../Classes/alarm_clock.dart';
 import '../Classes/alarm_database.dart';
 
+import 'package:timezone/timezone.dart' as tz;
+
 /*
    This function represents all needed information in order to call the
    "AlarmClockHandler" widget.
  */
 class AlarmClockHandlerArgs {
+  final bool modeConfigure;
+  final AlarmClock alarmClock;
 
-    final bool modeConfigure;
-    final AlarmClock alarmClock;
-
-    AlarmClockHandlerArgs(this.modeConfigure, this.alarmClock);
+  AlarmClockHandlerArgs(this.modeConfigure, this.alarmClock);
 }
 
 class AlarmClockHandler extends StatefulWidget {
@@ -92,16 +93,15 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
     }
     // The user wants to create a new alarm clock
     else {
-        this._nameTextController.text = "Alarm Clock";
+      this._nameTextController.text = "";
 
-        // Add a default time which is the next hour
-        this._timeTextController.text =
-                DateFormat.jm().format(DateTime.now().add(Duration(hours: 1)));
+      // Add a default time which is the next hour
+      this._timeTextController.text = DateFormat.Hm().format(DateTime.now());
 
-        for (int index=0; index<7; index++)
-            this._alarmClock.weekdays[index] = 0;
+      for (int index = 0; index < 7; index++)
+        this._alarmClock.weekdays[index] = 0;
 
-        this._widgetTitle = "Create new alarm clock";
+      this._widgetTitle = "Create new alarm clock";
     }
 
     dev.log("Initialised all values.", name: this._debugName);
@@ -162,15 +162,12 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
             controller: _timeTextController,
             decoration: InputDecoration(
                 hintText: 'Select time',
-                hintStyle: TextStyle(fontWeight: FontWeight.bold)
-            ),
+                hintStyle: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () async {
               TimeOfDay time = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay(
-                      hour: TimeOfDay.now().hour + 1,
-                      minute: TimeOfDay.now().minute
-                      ),
+                context: context,
+                initialTime: TimeOfDay(
+                    hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute),
               );
 
               // Test first, if the user provided any time
@@ -311,9 +308,8 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.check),
+          child: Icon(Icons.add_alert),
           onPressed: () {
-
             // Save the changed values into the alarm clock
             this._alarmClock.name = this._nameTextController.text;
             this._alarmClock.time = this._timeTextController.text;
@@ -327,10 +323,8 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
               this._alarmDatabase.addAlarm(this._alarmClock);
             }
 
-            dev.log(
-                "Saving changes to the alarm clock",
-                name: "Alarm Clock Handler"
-            );
+            dev.log("Saving changes to the alarm clock",
+                name: "Alarm Clock Handler");
             Navigator.pop(context, "Alarm Clock saved");
           }),
     );

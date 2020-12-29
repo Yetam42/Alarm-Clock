@@ -1,11 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wecker">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
    <application
-        android:label="wecker"
+        android:label="alarm_app"
         android:icon="@mipmap/ic_launcher">
 
         <activity
@@ -43,7 +40,15 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+             </intent-filter>
+        </receiver>
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
 
+
+        <!--
        <service
            android:name="io.flutter.plugins.androidalarmmanager.AlarmService"
            android:permission="android.permission.BIND_JOB_SERVICE"
@@ -57,7 +62,12 @@
            <intent-filter>
                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
            </intent-filter>
-       </receiver>
+       </receiver>-->
 
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
 </manifest>
