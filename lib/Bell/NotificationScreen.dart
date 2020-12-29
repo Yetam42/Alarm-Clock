@@ -23,9 +23,11 @@ class NotificationScreen extends StatelessWidget {
             children: [
               Text(alarmName),
               LightSensorWidget(),
-              RaisedButton(onPressed: () {
-                FlutterRingtonePlayer.stop();
-              })
+              RaisedButton(
+                  child: Text('Stop Alarm'),
+                  onPressed: () {
+                    FlutterRingtonePlayer.stop();
+                  })
             ],
           ),
         ));
