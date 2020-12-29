@@ -1,6 +1,8 @@
 /* =======================
  * Imports
  * ======================= */
+import 'package:wecker/Bell/NotificationScreen.dart';
+
 import 'Classes/alarm_database.dart';
 import 'Classes/alarm_clock.dart';
 import 'alarm_clock_handler/alarm_clock_handler.dart';
@@ -10,9 +12,19 @@ import 'package:async_builder/async_builder.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:developer' as dev;
+import 'dart:io';
+
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+final String defaultLocale = Platform.localeName;
 
 void main() {
   dev.log("Application installed!", name: "Application");
+  tz.initializeTimeZones();
 
   runApp(MaterialApp(
     home: HomeScreen(),
@@ -68,6 +80,23 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    var androidSettings = AndroidInitializationSettings('app_icon');
+    var initSettings = InitializationSettings(android: androidSettings);
+    flutterLocalNotificationsPlugin.initialize(initSettings,
+        onSelectNotification: onClickNotification);
+  }
+
+  Future onClickNotification(String alarm_name) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return NotificationScreen(
+        alarmName: alarm_name,
+      );
+    }));
+  }
+
+  @override
   Widget build(BuildContext context) {
     /* =================
      * Preparations
@@ -119,12 +148,9 @@ class _HomeScreen extends State<HomeScreen> {
            * Listing of all alarm clocks
            * -------------------------------- */
           builder: (context, List<AlarmClock> allAlarmClocks) {
-
-            return this._alarmHelper.getAlarmClocksList(
-                context,
-                allAlarmClocks,
-                setState
-            );
+            return this
+                ._alarmHelper
+                .getAlarmClocksList(context, allAlarmClocks, setState);
           }),
     );
   }

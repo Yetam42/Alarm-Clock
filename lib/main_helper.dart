@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:wecker/Bell/ring_helper.dart';
 import 'Classes/alarm_clock.dart';
 import 'Classes/alarm_database.dart';
 import 'alarm_clock_handler/alarm_clock_handler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:developer' as dev;
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class AlarmHelper {
   double _screenWidth;
@@ -83,81 +89,77 @@ class AlarmHelper {
     "ownSetState" is just an alias for "setState" since we can't use "setState"
     in this function directly.
    */
-    ListView getAlarmClocksList(
-            BuildContext context, 
-            List<AlarmClock> allAlarmClocks,
-            Function ownSetState) 
-    {
-        return ListView.builder(
-            itemCount: allAlarmClocks.length,
-            itemBuilder: (context, index) {
-              // Delete an alarm by swiping it to the left
-              return Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                onDismissed: (_) {
+  ListView getAlarmClocksList(BuildContext context,
+      List<AlarmClock> allAlarmClocks, Function ownSetState) {
+    return ListView.builder(
+        itemCount: allAlarmClocks.length,
+        itemBuilder: (context, index) {
+          // Delete an alarm by swiping it to the left
 
-                  // Remove the alarm clock from the databse
-                  this._alarmDatabase.removeAlarm(allAlarmClocks[index]);
+          RingHelper(allAlarmClocks[index]).showNotification();
+          //dev.log('Started alarms', name: 'Ring');
 
-                  ownSetState(() {
-                    // Reload the list but remove the alarm Clock from
-                    // the list first
-                    allAlarmClocks.removeAt(index);
-                    }
-                  );
-                },
-                /*
+          return Dismissible(
+            key: UniqueKey(),
+            direction: DismissDirection.endToStart,
+            onDismissed: (_) {
+              // Remove the alarm clock from the databse
+              this._alarmDatabase.removeAlarm(allAlarmClocks[index]);
+
+              ownSetState(() {
+                // Reload the list but remove the alarm Clock from
+                // the list first
+                allAlarmClocks.removeAt(index);
+              });
+            },
+            /*
                  Display on each card on the left:
                   - the name
                   - the alarm time
                  of the current alarm clock
                  */
-                child: Card(
-                  child: ListTile(
-                    title: Text(allAlarmClocks[index].time),
-                    subtitle: Text(allAlarmClocks[index].name),
-                    // A switch to toggle the alarm clock active status
-                    trailing: Switch(
-                        value: allAlarmClocks[index].active == 1,
-                        onChanged: (changingStatus) {
-                          // Toogle the status of the alarm clock first
-                          if (allAlarmClocks[index].active == 1)
-                            allAlarmClocks[index].active = 0;
-                          else
-                            allAlarmClocks[index].active = 1;
+            child: Card(
+              child: ListTile(
+                title: Text(allAlarmClocks[index].time),
+                subtitle: Text(allAlarmClocks[index].name),
+                // A switch to toggle the alarm clock active status
+                trailing: Switch(
+                    value: allAlarmClocks[index].active == 1,
+                    onChanged: (changingStatus) {
+                      // Toogle the status of the alarm clock first
+                      if (allAlarmClocks[index].active == 1)
+                        allAlarmClocks[index].active = 0;
+                      else
+                        allAlarmClocks[index].active = 1;
 
-                            ownSetState(() {});
+                      ownSetState(() {});
 
-                          // Save the new status in the database
-                          this
-                              ._alarmDatabase
-                              .updateAlarm(allAlarmClocks[index]);
-                        }),
-                    // Update the alarm clock in the database
-                    onTap: () async {
-                      // Go to the editing page first than refresh the alarm
-                      // clock list next
-                      Navigator.pushNamed(
-                          context,
-                          "/AlarmClockHandler",
-                          arguments: AlarmClockHandlerArgs(
-                            true,
-                            allAlarmClocks[index]
-                          ),
-                      ).whenComplete(() => ownSetState(() {}));
-                    },
-                  ),
-                ),
-                // the color and image that is revealed on the right
-                // while swiping
-                background: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    color: Colors.red,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    )),
-              );
-            });
-    }
+                      // Save the new status in the database
+                      this._alarmDatabase.updateAlarm(allAlarmClocks[index]);
+                    }),
+                // Update the alarm clock in the database
+                onTap: () async {
+                  // Go to the editing page first than refresh the alarm
+                  // clock list next
+
+                  Navigator.pushNamed(
+                    context,
+                    "/AlarmClockHandler",
+                    arguments:
+                        AlarmClockHandlerArgs(true, allAlarmClocks[index]),
+                  ).whenComplete(() => ownSetState(() {}));
+                },
+              ),
+            ),
+            // the color and image that is revealed on the right
+            // while swiping
+            background: Container(
+                margin: EdgeInsets.symmetric(horizontal: 15),
+                color: Colors.red,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                )),
+          );
+        });
+  }
 }
