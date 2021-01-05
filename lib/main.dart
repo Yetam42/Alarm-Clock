@@ -1,7 +1,7 @@
 /* =======================
  * Imports
  * ======================= */
-import 'package:wecker/Bell/NotificationScreen.dart';
+import 'package:wecker/ring/NotificationScreen.dart';
 
 import 'Classes/alarm_database.dart';
 import 'Classes/alarm_clock.dart';
@@ -17,6 +17,8 @@ import 'dart:io';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'ring/LightConfigurationScreen.dart';
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -27,6 +29,9 @@ void main() {
   tz.initializeTimeZones();
 
   runApp(MaterialApp(
+    // remove the debug banner
+    debugShowCheckedModeBanner: false,
+
     home: HomeScreen(),
     // Handles the arguments which should be given to each widget
     onGenerateRoute: (RouteSettings nextWidget) {
@@ -82,16 +87,22 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    // initialisation for the flutter local_notification plugin
     var androidSettings = AndroidInitializationSettings('app_icon');
     var initSettings = InitializationSettings(android: androidSettings);
     flutterLocalNotificationsPlugin.initialize(initSettings,
         onSelectNotification: onClickNotification);
   }
 
-  Future onClickNotification(String alarm_name) {
+  // open notification screen when the user presses on the notification
+  Future onClickNotification(String alarmName) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return NotificationScreen(
-        alarmName: alarm_name,
+        // gets the name of the corresponding alarm
+        // look in ring_helper for usage
+        // it can be found under payload
+        alarmName: alarmName,
       );
     }));
   }
@@ -114,6 +125,24 @@ class _HomeScreen extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Alarm Clocks'),
         centerTitle: true,
+        /*-----------------------------------------
+       * button for light level configuration
+       *----------------------------------------*/
+        actions: <Widget>[
+          IconButton(
+              // has the settings icon
+              // future features could extend this part of the code
+              // for insatnce adding a link to the github page
+              icon: Icon(Icons.settings),
+              tooltip: 'Configure maximum light level',
+              // open screen where the a new trigger light level can be set
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LightConfigurationScreen()));
+              })
+        ],
       ),
       /* ---------------------------------------
        * Button to create a new alarm clock

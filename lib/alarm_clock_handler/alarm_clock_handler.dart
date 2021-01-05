@@ -93,10 +93,11 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
     }
     // The user wants to create a new alarm clock
     else {
-      this._nameTextController.text = "";
+      this._nameTextController.text = '';
 
       // Add a default time which is the next hour
-      this._timeTextController.text = DateFormat.Hm().format(DateTime.now());
+      this._timeTextController.text =
+          DateFormat.Hm().format(DateTime.now().add(Duration(hours: 1)));
 
       for (int index = 0; index < 7; index++)
         this._alarmClock.weekdays[index] = 0;

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wecker/Bell/ring_helper.dart';
+import 'package:wecker/ring/ring_helper.dart';
 import 'Classes/alarm_clock.dart';
 import 'Classes/alarm_database.dart';
 import 'alarm_clock_handler/alarm_clock_handler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:developer' as dev;
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -94,11 +93,12 @@ class AlarmHelper {
     return ListView.builder(
         itemCount: allAlarmClocks.length,
         itemBuilder: (context, index) {
+          // start notification plugin if alarm is activated
+          if (allAlarmClocks[index].active == 1) {
+            RingHelper(allAlarmClocks[index]).showNotification();
+          }
+
           // Delete an alarm by swiping it to the left
-
-          RingHelper(allAlarmClocks[index]).showNotification();
-          //dev.log('Started alarms', name: 'Ring');
-
           return Dismissible(
             key: UniqueKey(),
             direction: DismissDirection.endToStart,
