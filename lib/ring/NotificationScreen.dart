@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'dart:developer' as dev;
 import 'LightWidget.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 class NotificationScreen extends StatelessWidget {
-  String alarmName;
+  final String alarmName;
+
   NotificationScreen({this.alarmName});
 
   @override
@@ -16,9 +13,9 @@ class NotificationScreen extends StatelessWidget {
     dev.log('Current max Value ${LightSensorWidgetState.maxValue}',
         name: 'trigger light level');
 
-    //comment the line below to prevent the app from ringing
-
+    // comment the line below to prevent the app from ringing
     FlutterRingtonePlayer.playAlarm();
+
     return Scaffold(
       backgroundColor: Colors.deepOrangeAccent,
       appBar: AppBar(

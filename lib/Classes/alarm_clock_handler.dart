@@ -95,7 +95,7 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
     else {
       this._nameTextController.text = '';
 
-      // Add a default time which is the next hour
+      // Select a default time which is the next hour
       this._timeTextController.text =
           DateFormat.Hm().format(DateTime.now().add(Duration(hours: 1)));
 

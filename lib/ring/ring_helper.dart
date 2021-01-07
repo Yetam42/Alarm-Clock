@@ -6,18 +6,19 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../Classes/alarm_clock.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 class RingHelper {
   AlarmClock alarmClock;
-  List weekdays;
+  List<int> weekdays;
 
-  String debugName = 'Ring';
+  final String _debugName = 'Ring';
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   RingHelper(AlarmClock alarmClock) {
     this.alarmClock = alarmClock;
     this.weekdays = this.alarmClock.weekdays;
+
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   }
 
   // check if the alarm is set for tomorrow
@@ -33,20 +34,23 @@ class RingHelper {
     posDay = tomorrowDateTime.weekday - 1;
 
     String tomorrowDay = DateFormat.EEEE().format(tomorrowDateTime);
-    dev.log('Selected day $tomorrowDay', name: debugName);
+    dev.log('Selected day $tomorrowDay', name: _debugName);
 
-    if (weekdays[posDay] == 1) {
-      return true;
-    }
+    if (weekdays[posDay] == 1) return true;
+
     return false;
   }
 
   // convert the String that contains the time to tz.TZDateTime
   tz.TZDateTime convertTZDateTime(String selectedTime) {
-    var selectedTimes = selectedTime.split(':');
+
+    // Split the time to get the hour and minute
+    List<String> selectedTimes = selectedTime.split(':');
+    selectedTimes[1] = selectedTimes[1].split(" ")[0];
+
     tz.TZDateTime now = tz.TZDateTime.now(tz.UTC);
     tz.TZDateTime convertedTime = tz.TZDateTime(tz.local, now.year, now.month,
-        now.day, int.parse(selectedTimes[0]), int.parse(selectedTimes[1]), 00);
+        now.day, int.parse(selectedTimes[0]), int.parse(selectedTimes[1]));
 
     return convertedTime;
   }
@@ -57,13 +61,14 @@ class RingHelper {
         convertTZDateTime(alarmClock.time).add(Duration(hours: -1));
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
-    dev.log('Time now $now', name: debugName);
-    dev.log('chosen time $chosenTime', name: debugName);
+    dev.log('Time now $now', name: _debugName);
+    dev.log('chosen time $chosenTime', name: _debugName);
 
     if (chosenTime.isBefore(now)) {
       chosenTime = findNextTime(chosenTime);
-      dev.log('${alarmClock.time} has already passed', name: debugName);
-      dev.log('New time: ${chosenTime}', name: debugName);
+
+      dev.log('${alarmClock.time} has already passed', name: _debugName);
+      dev.log('New time: $chosenTime', name: _debugName);
     }
 
     return chosenTime;
@@ -76,9 +81,11 @@ class RingHelper {
       // if this is not the chase a day is added
       currentTime = currentTime.add(Duration(days: 1));
     } while (tomorrow(currentTime) == false);
-    dev.log('Next Ring on $currentTime', name: debugName);
+    dev.log('Next Ring on $currentTime', name: _debugName);
+
     String nextDay = DateFormat.EEEE().format(currentTime);
-    dev.log('It will ring on ${nextDay}', name: debugName);
+
+    dev.log('It will ring on $nextDay', name: _debugName);
 
     return currentTime;
   }
@@ -86,14 +93,13 @@ class RingHelper {
   // look in the flutter_local_notification plugin for more infromation
   // if required
   showNotification() async {
-    dev.log('Current alarm id: ${alarmClock.id}', name: debugName);
+    dev.log('Current alarm id: ${alarmClock.id}', name: _debugName);
 
     // add safety function that sets a least on day to true
     // otherwise the 'tomorrow' function will be stuck in loop
     failSafe();
 
-    // debug message that shows the active days of the selected alarm
-    activOn();
+    logActiveOn();
 
     var androidDetails = AndroidNotificationDetails(
         alarmClock.id.toString(),
@@ -102,7 +108,9 @@ class RingHelper {
         fullScreenIntent: true,
         priority: Priority.high,
         importance: Importance.high);
-    var platFormDetails = new NotificationDetails(android: androidDetails);
+
+    var platFormDetails = NotificationDetails(android: androidDetails);
+
     if (alarmClock.active == 1)
       await flutterLocalNotificationsPlugin.zonedSchedule(alarmClock.id,
           'Wecker App', alarmClock.name, nextRing(), platFormDetails,
@@ -113,10 +121,11 @@ class RingHelper {
           payload: alarmClock.name);
   }
 
-  void activOn() {
+  // debug message that shows the active days of the selected alarm
+  void logActiveOn() {
     for (int i = 0; i < weekdays.length; i++) {
       if (weekdays[i] == 1) {
-        dev.log('day ${i + 1} is active', name: debugName);
+        dev.log('day ${i + 1} is active', name: _debugName);
       }
     }
   }

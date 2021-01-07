@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wecker/ring/ring_helper.dart';
 import 'Classes/alarm_clock.dart';
 import 'Classes/alarm_database.dart';
-import 'alarm_clock_handler/alarm_clock_handler.dart';
+import 'Classes/alarm_clock_handler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
