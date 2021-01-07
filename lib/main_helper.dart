@@ -5,9 +5,6 @@ import 'Classes/alarm_database.dart';
 import 'Classes/alarm_clock_handler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 class AlarmHelper {
   double _screenWidth;
   double _screenHeight;
