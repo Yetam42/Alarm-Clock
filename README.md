@@ -1,16 +1,22 @@
-# wecker
+# Alarm Clock
+This flutter application is in the **Pre-Alpha 0.0.1** so it doesn't have many
+features yet...
 
-A new Flutter application.
+# What can it do?
+Currently, you can:
+- Create, configure and remove alarm clocks
+- Feature: You have to turn on the lights in your room in order to deactivate
+    the clock if it wakes you up!
 
-## Getting Started
+# Demos
+### Creating alarm clock
+![creating_image](./images/creating_alarm_clock.gif)
 
-This project is a starting point for a Flutter application.
+### Configuring alarm clock
+![configuring_alarm_clock](./images/configure_alarm_clock.gif)
 
-A few resources to get you started if this is your first Flutter project:
+### Deleting alarm clock
+![deleting_alarm_clock](./images/deleting_alarm_clock.gif)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Setting light value alarm clock
+![set_light_value](./images/set_lighlevel.gif)
