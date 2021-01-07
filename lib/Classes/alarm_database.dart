@@ -5,7 +5,6 @@ import 'dart:developer' as dev;
 
 import 'package:wecker/Classes/alarm_clock.dart';
 
-//https://www.codingpizza.com/en/storing-in-database-with-flutter/
 class AlarmDatabase {
   // The name of the database
   String _name;
@@ -37,7 +36,7 @@ class AlarmDatabase {
      This function loads the database from its path. If it doesn't exist
      than it creates a new database.
    */
-   Future<int> loadDatabase() async {
+  Future<void> loadDatabase() async {
     // Get the path of the database and the database itself from the path
     String _databasePath = join(await getDatabasesPath(), this._name) + '.db';
 
@@ -90,11 +89,6 @@ class AlarmDatabase {
     }
   }
 
-  //insertAlarm(AlarmClock alarm) async {
-  //  var res = await this.database.insert(Alarm.TABLENAME, alarm.toMap(),
-  //      conflictAlgorithm: ConflictAlgorithm.replace);
-  //  return res;
-  //}
   /*
     This function adds an alarm clock into the database.
    */
@@ -147,20 +141,6 @@ class AlarmDatabase {
     This function updates the values from a clock in the database.
    */
   void updateAlarm(AlarmClock alarmClock) async {
-    //this.database.rawQuery("""
-    //    UPDATE ${this._tableName} SET
-    //        time=${alarmClock['time']},
-    //        name=${alarmClock['name']},
-    //        active=${alarmClock['active']},
-    //        mon=${alarmClock['weekdays'][0]},
-    //        tue=${alarmClock['weekdays'][1]},
-    //        wed=${alarmClock['weekdays'][2]},
-    //        thu=${alarmClock['weekdays'][3]},
-    //        fri=${alarmClock['weekdays'][4]},
-    //        sat=${alarmClock['weekdays'][5]},
-    //        sun=${alarmClock['weekdays'][6]}
-    //    WHERE id=${alarmClock['id']};
-    //        """);
     this.database.rawQuery("""
             UPDATE ${this._tableName} SET
                 time='${alarmClock.time}',
@@ -182,7 +162,6 @@ class AlarmDatabase {
     database ordered by their ID.
    */
   Future<List<AlarmClock>> getAlarmClocks() async {
-
     // Due to a bug: https://github.com/flutter/flutter/issues/62019
     // We need to load (in case if it hasn't been loaded yet) the content
     // of the database first
@@ -200,58 +179,25 @@ class AlarmDatabase {
     /*queryRet = this.database.rawQuery("""
             SELECT * FROM ${this._tableName} ORDER BY id;
             """);*/
-    
+
     return List.generate(queryRet.length, (alarmClockIndex) {
+      // Create a temporary alarm clock which is added into the list
+      // but we need to save the values of this alarm clock first
+      tmp = AlarmClock();
+      tmp.id = queryRet[alarmClockIndex]["id"];
+      tmp.time = queryRet[alarmClockIndex]["time"];
+      tmp.name = queryRet[alarmClockIndex]["name"];
+      tmp.active = queryRet[alarmClockIndex]["active"];
 
-        // Create a temporary alarm clock which is added into the list
-        // but we need to save the values of this alarm clock first
-        tmp = AlarmClock();
-        tmp.id = queryRet[alarmClockIndex]["id"];
-        tmp.time = queryRet[alarmClockIndex]["time"];
-        tmp.name = queryRet[alarmClockIndex]["name"];
-        tmp.active = queryRet[alarmClockIndex]["active"];
-        
-        tmp.weekdays[0] = queryRet[alarmClockIndex]["mon"];
-        tmp.weekdays[1] = queryRet[alarmClockIndex]["tue"];
-        tmp.weekdays[2] = queryRet[alarmClockIndex]["wed"];
-        tmp.weekdays[3] = queryRet[alarmClockIndex]["thu"];
-        tmp.weekdays[4] = queryRet[alarmClockIndex]["fri"];
-        tmp.weekdays[5] = queryRet[alarmClockIndex]["sat"];
-        tmp.weekdays[6] = queryRet[alarmClockIndex]["sun"];
+      tmp.weekdays[0] = queryRet[alarmClockIndex]["mon"];
+      tmp.weekdays[1] = queryRet[alarmClockIndex]["tue"];
+      tmp.weekdays[2] = queryRet[alarmClockIndex]["wed"];
+      tmp.weekdays[3] = queryRet[alarmClockIndex]["thu"];
+      tmp.weekdays[4] = queryRet[alarmClockIndex]["fri"];
+      tmp.weekdays[5] = queryRet[alarmClockIndex]["sat"];
+      tmp.weekdays[6] = queryRet[alarmClockIndex]["sun"];
 
-        return tmp;
+      return tmp;
     });
-
   }
-
-  //Future<List<AlarmClock>> retrieveAlarms() async {
-  //  final List<Map<String, dynamic>> maps =
-  //      await this.database.query(Alarm.TABLENAME);
-
-  //  return List.generate(maps.length, (i) {
-  //    return AlarmClock(
-  //        id: maps[i]['id'],
-  //        name: maps[i]['name'],
-  //        time: maps[i]['time'],
-  //        active: maps[i]['active'],
-  //        mon: maps[i]['mon'],
-  //        tue: maps[i]['tue'],
-  //        wed: maps[i]['wed'],
-  //        thu: maps[i]['thu'],
-  //        fri: maps[i]['fri'],
-  //        sat: maps[i]['sat'],
-  //        sun: maps[i]['sat']);
-  //  });
-  //}
-
-  //updateAlarm(Alarm alarm) async {
-  //  await this.database.update(Alarm.TABLENAME, alarm.toMap(),
-  //      where: 'id = ?',
-  //      whereArgs: [alarm.id],
-  //      conflictAlgorithm: ConflictAlgorithm.replace);
-  //}
-
-  //deleteAlarm(int id) async {
-  //  this.database.delete(Alarm.TABLENAME, where: 'id = ?', whereArgs: [id]);
-  //}
 }
