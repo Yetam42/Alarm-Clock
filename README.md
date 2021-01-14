@@ -5,8 +5,12 @@ features yet...
 # What can it do?
 Currently, you can:
 - Create, configure and remove alarm clocks
+- Set an alarm that rings at the chosen time
 - Feature: You have to turn on the lights in your room in order to deactivate
     the clock if it wakes you up!
+    
+# Bugs that might appear
+- It might be the case that a alarm is only repeated twice. For now the user should turn the alarm on and off after it has rang. 
 
 # Demos
 ### Creating alarm clock
