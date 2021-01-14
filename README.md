@@ -10,7 +10,7 @@ Currently, you can:
     the clock if it wakes you up!
     
 # Bugs that might appear
-- It might be the case that a alarm is only repeated twice. For now the user should turn the alarm on and off after it has rang. 
+- It might be the case that an alarm is only repeated twice. For now the user should turn the alarm on and off after it has rang. 
 
 # Demos
 ### Creating alarm clock
