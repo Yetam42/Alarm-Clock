@@ -95,8 +95,14 @@ class _AlarmClockHandler extends State<AlarmClockHandler> {
     else {
       this._nameTextController.text = '';
 
+<<<<<<< HEAD:lib/alarm_clock_handler/alarm_clock_handler.dart
       // Add a default time which is the next hour
       this._timeTextController.text = DateFormat.Hm().format(DateTime.now());
+=======
+      // Select a default time which is the next hour
+      this._timeTextController.text =
+          DateFormat.Hm().format(DateTime.now().add(Duration(hours: 1)));
+>>>>>>> 45fcc1d8709853cc4bd3cb6bd0977bb258c72a01:lib/Classes/alarm_clock_handler.dart
 
       for (int index = 0; index < 7; index++)
         this._alarmClock.weekdays[index] = 0;

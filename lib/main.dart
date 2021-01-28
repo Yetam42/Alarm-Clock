@@ -5,7 +5,7 @@ import 'package:wecker/ring/NotificationScreen.dart';
 
 import 'Classes/alarm_database.dart';
 import 'Classes/alarm_clock.dart';
-import 'alarm_clock_handler/alarm_clock_handler.dart';
+import 'Classes/alarm_clock_handler.dart';
 import 'main_helper.dart';
 
 import 'package:async_builder/async_builder.dart';
@@ -18,11 +18,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'ring/LightConfigurationScreen.dart';
-
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
-final String defaultLocale = Platform.localeName;
 
 void main() {
   dev.log("Application installed!", name: "Application");
@@ -48,7 +43,7 @@ void main() {
         });
       }
 
-      // Unknown widget
+      // Tried to open an unknown widget!
       return MaterialPageRoute(builder: (context) {
         return Column(
           children: <Widget>[
@@ -88,15 +83,25 @@ class _HomeScreen extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // initialisation for the flutter local_notification plugin
-    var androidSettings = AndroidInitializationSettings('app_icon');
-    var initSettings = InitializationSettings(android: androidSettings);
+    /* -----------------------------------------------
+     * Initialisatin of local-notification-plugin 
+     * ----------------------------------------------- */
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+    AndroidInitializationSettings androidSettings;
+    InitializationSettings initSettings;
+
+    final String defaultLocale = Platform.localeName;
+
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    androidSettings = AndroidInitializationSettings('app_icon');
+    initSettings = InitializationSettings(android: androidSettings);
+
     flutterLocalNotificationsPlugin.initialize(initSettings,
         onSelectNotification: onClickNotification);
   }
 
   // open notification screen when the user presses on the notification
-  Future onClickNotification(String alarmName) {
+  Future<dynamic> onClickNotification(String alarmName) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return NotificationScreen(
         // gets the name of the corresponding alarm
@@ -126,13 +131,13 @@ class _HomeScreen extends State<HomeScreen> {
         title: Text('Alarm Clocks'),
         centerTitle: true,
         /*-----------------------------------------
-       * button for light level configuration
-       *----------------------------------------*/
+         * button for light level configuration
+         *----------------------------------------*/
         actions: <Widget>[
           IconButton(
-              // has the settings icon
-              // future features could extend this part of the code
-              // for insatnce adding a link to the github page
+              // - has the settings icon
+              // - future features could extend this part of the code
+              // - for instance adding a link to the github page
               icon: Icon(Icons.settings),
               tooltip: 'Configure maximum light level',
               // open screen where the a new trigger light level can be set
