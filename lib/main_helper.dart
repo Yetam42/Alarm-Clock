@@ -4,6 +4,7 @@ import 'Classes/alarm_clock.dart';
 import 'Classes/alarm_database.dart';
 import 'alarm_clock_handler/alarm_clock_handler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:developer' as dev;
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -97,6 +98,8 @@ class AlarmHelper {
           if (allAlarmClocks[index].active == 1) {
             RingHelper(allAlarmClocks[index]).showNotification();
           }
+
+          dev.log('${DateTime.now().timeZoneOffset}', name: 'Timezone');
 
           // Delete an alarm by swiping it to the left
           return Dismissible(

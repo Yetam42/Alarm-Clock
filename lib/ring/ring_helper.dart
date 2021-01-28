@@ -15,6 +15,9 @@ class RingHelper {
 
   String debugName = 'Ring';
 
+  // checks the offset of the timezone
+  Duration timeZoneOffste = DateTime.now().timeZoneOffset;
+
   RingHelper(AlarmClock alarmClock) {
     this.alarmClock = alarmClock;
     this.weekdays = this.alarmClock.weekdays;
@@ -54,7 +57,9 @@ class RingHelper {
   // returns the next time the selected alarm rings
   tz.TZDateTime nextRing() {
     tz.TZDateTime chosenTime =
-        convertTZDateTime(alarmClock.time).add(Duration(hours: -1));
+        // alarmClock.time is always saved with the offset 0
+        // subtracting the current offset prevents problems
+        convertTZDateTime(alarmClock.time).add(-timeZoneOffste);
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
     dev.log('Time now $now', name: debugName);

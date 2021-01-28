@@ -5,6 +5,8 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:developer' as dev;
 
+import 'package:wecker/main.dart';
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -60,6 +62,14 @@ class LightSensorWidgetState extends State<LightSensorWidget> {
     initPlatformState();
   }
 
+  // this function stops the stream listening to the light level
+  // when closing the screen
+  @override
+  void dispose() {
+    stopListening();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.config == false) {
@@ -67,7 +77,6 @@ class LightSensorWidgetState extends State<LightSensorWidget> {
         return RaisedButton(
             child: Text('Stop and go back to List'),
             onPressed: () async {
-              stopListening();
               FlutterRingtonePlayer.stop();
               await flutterLocalNotificationsPlugin.cancelAll();
               Navigator.pop(context);
@@ -89,7 +98,6 @@ class LightSensorWidgetState extends State<LightSensorWidget> {
                   LightSensorWidgetState.maxValue = int.parse(luxString);
                   dev.log('New max value : $luxString',
                       name: 'trigger light level');
-                  stopListening();
 
                   Navigator.pop(context);
                 })
